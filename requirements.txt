@@ -1,4 +1,4 @@
-codecov==2.0.15
+codecov==2.0.16
 flake8==3.7.8
 flask==1.1.1
 pylint==2.3.1
