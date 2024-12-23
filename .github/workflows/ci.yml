@@ -11,7 +11,7 @@ on:
 jobs:
     tests_and_coverage:
         name: Unit tests and code coverage
-        runs-on: [ubuntu-latest]
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
