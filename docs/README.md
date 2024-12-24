@@ -11,8 +11,8 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
   <tr>
     <td>Master</td>
     <td>
-      <a href="https://travis-ci.com/mariusmucenicu/knowlift/branches">
-        <img src="https://travis-ci.com/mariusmucenicu/knowlift.svg?branch=master"></a>
+      <a href="https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml?query=branch%3Amaster">
+        <img src="https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml/badge.svg"></a>
     </td>
   </tr>
   <tr>
