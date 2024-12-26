@@ -92,8 +92,8 @@ This project adheres to [SemVer](http://semver.org/) for versioning.
 For the versions available, see the [tags on this repository](https://github.com/mariusmucenicu/knowlift/tags).
 
 - New **major** versions are exceptional and are planned very long in advance.
-- New **minor** versions are feature releases; they get released roughly every 3 months.
-- New **patch** versions are bug fix releases; they get released roughly every month.
+- New **minor** versions are feature releases; they get released more frequently.
+- New **patch** versions are bug fix releases; they get released as needed.
 
 ## Code of conduct
 This project adheres to the Contributor Covenant [code of conduct](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
