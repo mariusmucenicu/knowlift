@@ -54,9 +54,9 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
 
 ## Contents
 + [Development](https://github.com/mariusmucenicu/knowlift#development)
++ [How can I contribute?](https://github.com/mariusmucenicu/knowlift#how-can-i-contribute)
 + [Versioning](https://github.com/mariusmucenicu/knowlift#versioning)
 + [Code of conduct](https://github.com/mariusmucenicu/knowlift#code-of-conduct)
-+ [How can I contribute?](https://github.com/mariusmucenicu/knowlift#how-can-i-contribute)
 
 ## Development
 In order to get the project started locally, follow the [setup instructions](https://github.com/mariusmucenicu/knowlift/blob/master/docs/SETUP.md).
