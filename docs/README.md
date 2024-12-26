@@ -43,6 +43,13 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
         <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"></a>
     </td>
   </tr>
+  <tr>
+    <th>License</th>
+    <td colspan="2" align="center">
+      <a href="https://www.gnu.org/licenses/gpl-3.0">
+        <img src="https://img.shields.io/badge/License-GPLv3-blue.svg"></a>
+    </td>
+  </tr>
 </table>
 
 ## Contents
