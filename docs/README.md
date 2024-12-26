@@ -32,8 +32,8 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
   <tr>
     <th>Progress</th>
     <td colspan="2" align="center">
-      <a href="https://github.com/mariusmucenicu/knowlift/compare/1.0.0...master">
-        <img src="https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/1.0.0.svg"></a>
+      <a href="https://github.com/mariusmucenicu/knowlift/compare/1.1.0...master">
+        <img src="https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/1.1.0.svg"></a>
     </td>
   </tr>
   <tr>
