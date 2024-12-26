@@ -36,6 +36,13 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
         <img src="https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/1.0.0.svg"></a>
     </td>
   </tr>
+  <tr>
+    <th>Code of Conduct</th>
+    <td colspan="2" align="center">
+      <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">
+        <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"></a>
+    </td>
+  </tr>
 </table>
 
 ## Contents
