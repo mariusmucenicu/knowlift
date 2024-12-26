@@ -59,40 +59,13 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
 + [How can I contribute?](https://github.com/mariusmucenicu/knowlift#how-can-i-contribute)
 
 ## Development
-In order to get the project started locally, you need to go through these simple steps:
+In order to get the project started locally, follow the [setup instructions](https://github.com/mariusmucenicu/knowlift/blob/master/docs/SETUP.md).
 
-### Step 1: Prerequisites
-+ Make sure you have any version of **Python 3.6.X**, **3.7.X** installed.
-    + If you **haven't got** any of the supported **Python** versions (mentioned above), you can download one from [here](https://www.python.org/).
-+ Clone or download this repository locally.
-+ [OPTIONAL]: Create a **Python** virtual environment (to isolate the game's package dependencies) and **activate** it.
+## How can I contribute?
+Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.  
 
-### Step 2: Change directory into the project root (everything you do will be done from here)
-
-### Step 3: Install package dependencies
-```pip install -r requirements.txt```
-
-### Step 4: Running the tests
-```python -m unittest discover``` (This command should show absolutely no errors)
-
-### Step 5: Running the game
-#### On Windows:
-+ Command Prompt:
-    + ```set FLASK_APP=wsgi.py```
-    + ```set FLASK_ENV=development``` (this activates the debugger and automatic reloader)
-    + ```flask run```
-
-+ PowerShell:
-    + ```$env:FLASK_APP = "wsgi.py"```
-    + ```$env:FLASK_ENV = "development"``` (this activates the debugger and automatic reloader)
-    + ```flask run```
-
-#### On Unix:
-+ ```export FLASK_APP=wsgi.py```
-+ ```export FLASK_ENV=development``` (this activates the debugger and automatic reloader)
-+ ```flask run```
-
-Now open your favourite browser and punch in: http://localhost:5000/ or http://127.0.0.1:5000/
+- Before opening an **issue** or **pull request**, please make sure to read the [contribution guidelines](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CONTRIBUTING.md).
+- **Performance**: This is just a fun project, but responses shouldn't take seconds.
 
 ## Versioning
 This project adheres to [SemVer](http://semver.org/) for versioning.
@@ -104,10 +77,3 @@ For the versions available, see the [tags on this repository](https://github.com
 
 ## Code of conduct
 This project adheres to the Contributor Covenant [code of conduct](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
-
-## How can I contribute?
-Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.  
-
-- Before filing an **issue** or submitting a **pull request** please make sure you read the [project's contribution guidelines](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CONTRIBUTING.md).
-- **Performance-wise**:
-    - This is just a fun project, however, one shouldn't wait like seconds between requests and responses.  
