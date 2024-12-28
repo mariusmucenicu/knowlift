@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 """
 Store logic that facilitates interaction with the underlying database.
 
