@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 function generateRandomNumber(upperBound, leftGlyph='(', rightGlyph=']', lowerBound=0) {
   /* the probability for rolling a correct answer is 100% for open & half-open intervals with the
    * same limits, i.e (2, 2) or [2, 2) will always yield 0 however there is only a 50% chance to
