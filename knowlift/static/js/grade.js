@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 function validateForm(event) {
     const isRadioChecked = document.querySelector('input:checked') !== null;
     const choiceBtn = document.querySelector('#js-btn-choice');
