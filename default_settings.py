@@ -16,43 +16,20 @@ Classes:
 
 Notes
 =====
-    * These settings are required to be available when the application starts up.
-    * Many of these settings are sensitive and should be treated as confidential.
-    * There is a different configuration available for each main environment (prod, dev, test).
-    * The environments above are used to indicate to Flask what context the app is running in.
-    * To switch between environments (configurations) set the FLASK_ENV environment variable to any
-        of the configuration's prefixes: 'production', 'development' or 'test'. FLASK_ENV is set
-        automatically to 'test' from within Python during test mode, regardless of what its value is
-        at the OS level. One shouldn't set FLASK_ENV to 'test' at the OS level, unless, for some
-        reason, one wants to run the application on purpose with the TestConfig.
-    * If FLASK_ENV is not set, the default configuration used will be the ProductionConfig.
-    * Do not alter settings in the application at runtime. For example, don't do things like:
-        flask.current_app.config['DEBUG'] = True
-
-Changes to this module
-======================
-    - Changes to this module should only be submitted through a formal process (via PR's).
-
-Altering settings locally
-=========================
-    - Any customization to should be done locally, outside the VCS via the instance folder.
-    - The instance folder does not exist by default and its ignored by git.
-    - The process of altering settings locally is as follows:
-        1. Create the instance folder in the project root, i.e, at the same level as this module.
-        2. Create a module named 'settings.py' inside the instance folder created at step 1.
-        3. Alter any settings there.
-
-        For example, to use a different SECRET_KEY simply add SECRET_KEY = 'new crypto value'
-            in that module (instance/settings.py), globally.
-
-    - The application loads the default settings and overrides them with any settings found in
-        instance/settings.py.
+    * These settings are required to be available when the application starts.
+    * Many of these settings are sensitive and must be kept confidential.
+    * There is a different configuration for each environment: prod, dev, test.
+    * The enviornments above tell Flask which context the app is running in.
+    * To switch between environments (configurations) set the KNOWLIFT_ENV env.
+    * If KNOWLIFT_ENV is not set, the default config used will be production.
+    * Do not alter settings in the application at runtime. For example,
+      don't do things like: flask.current_app.config['DEBUG'] = True
 
 Miscellaneous objects:
 ======================
-    Except for the public objects exported by this module and their public APIs (if applicable),
-        everything else is an implementation detail, and shouldn't be relied upon as it may change
-        over time.
+    Except for the public objects exported by this module and their
+    public APIs (if applicable), everything else is an implementation
+    detail, and shouldn't be relied upon as it may change over time.
 """
 
 # Standard library
@@ -61,7 +38,9 @@ import os
 
 
 class ConsoleFilter:
-    """Allow only LogRecords whose severity levels are either DEBUG, INFO or WARNING."""
+    """
+    Allow only LogRecords whose severity levels are DEBUG, INFO or  WARNING.
+    """
 
     def __call__(self, log):
         if log.levelno <= logging.WARNING:
@@ -71,7 +50,9 @@ class ConsoleFilter:
 
 
 class FileFilter:
-    """Allow only LogRecords whose severity levels are either ERROR or CRITICAL."""
+    """
+    Allow only LogRecords whose severity levels are ERROR or  CRITICAL.
+    """
 
     def __call__(self, log):
         if log.levelno > logging.WARNING:
@@ -81,32 +62,44 @@ class FileFilter:
 
 
 class Config:
-    """Store the default configuration. Override these values in subclasses per-environment."""
+    """
+    Store the default configuration.
 
-    # Whether debug mode is enabled. This is overridden by the FLASK_DEBUG environment variable.
-    # DO NOT ENABLE DEBUG MODE WHEN DEPLOYING IN PRODUCTION!
+    Override these values in subclasses per-environment.
+    """
+
+    # Whether debug mode is enabled. This is overridden by the
+    # FLASK_DEBUG environment variable. DO NOT ENABLE DEBUG MODE WHEN
+    # DEPLOYING IN PRODUCTION!
     DEBUG = False
 
-    # Whether testing mode is enabled. Exceptions are propagated rather than handled by Flask.
+    # Whether testing mode is enabled. Exceptions are propagated rather
+    # than handled by Flask.
     TESTING = False
 
-    # Absolute path to the project root on the filesystem.
-    # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+    # Absolute path to the project root on the filesystem. Build paths
+    # inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     # The absolute pathname of the database file to be opened.
     DATABASE = os.path.join(BASE_DIR, 'default.db')
 
-    # The secret key is used to provide cryptographic signing (e.g used to sign Cookies).
-    # SECURITY WARNING: Set this to some random bytes. Keep this value secret in production!
-    SECRET_KEY = '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
+    # The secret key is used to provide cryptographic signing (e.g used
+    # to sign Cookies). SECURITY WARNING: Set this to some random bytes.
+    # Keep this value secret in production!
+    SECRET_KEY = (
+        '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
+    )
 
     # Initial configuration for the logging machinery.
     LOGGING_CONFIG = {
         'version': 1,
         'formatters': {
             'default': {
-                'format': f'[%(asctime)s] %(levelname)s in %(module)s, line %(lineno)d: %(message)s'
+                'format': (
+                    "[%(asctime)s] %(levelname)s in %(module)s, "
+                    "line %(lineno)d: %(message)s"
+                )
             },
         },
         'handlers': {
@@ -115,12 +108,6 @@ class Config:
                 'formatter': 'default',
             },
         },
-        # We need to set the loggers explicitly otherwise they will wind up disabled on config load.
-        # This is on purpose because this will disable all the potential 3rd party loggers that this
-        # application might indirectly use (now or in the future), and save us from a ton of spam
-        # from those. As such, the most important loggers will be added below, with their levels
-        # explicitly set as well, because some 3rd parties (e.g werkzeug) will set a level on their
-        # loggers if there isn't one, which might be different than the one we desire.
         'loggers': {
             'knowlift': {
                 'level': 'DEBUG',
@@ -148,13 +135,16 @@ class ProductionConfig(Config):
 
     DEBUG = False
     TESTING = False
-    DATABASE = os.environ.get('FLASK_DATABASE')  # this can also be overridden via settings.py
-    SECRET_KEY = os.environ.get('FLASK_SECRET_KEY')  # this can also be overridden via settings.py
+    DATABASE = os.environ.get('KNOWLIFT_DATABASE')
+    SECRET_KEY = os.environ.get('KNOWLIFT_SECRET_KEY')
     LOGGING_CONFIG = {
         'version': 1,
         'formatters': {
             'default': {
-                'format': f'[%(asctime)s] %(levelname)s in %(module)s, line %(lineno)d: %(message)s'
+                'format': (
+                    "[%(asctime)s] %(levelname)s in %(module)s, "
+                    "line %(lineno)d: %(message)s"
+                )
             },
         },
         'filters': {
@@ -212,7 +202,10 @@ class DevelopmentConfig(Config):
         'version': 1,
         'formatters': {
             'default': {
-                'format': f'[%(asctime)s] %(levelname)s in %(module)s, line %(lineno)d: %(message)s'
+                'format': (
+                    "[%(asctime)s] %(levelname)s in %(module)s, "
+                    "line %(lineno)d: %(message)s"
+                )
             },
         },
         'handlers': {
@@ -253,7 +246,10 @@ class TestConfig(Config):
         'version': 1,
         'formatters': {
             'default': {
-                'format': f'[%(asctime)s] %(levelname)s in %(module)s, line %(lineno)d: %(message)s'
+                'format': (
+                    "[%(asctime)s] %(levelname)s in %(module)s, "
+                    "line %(lineno)d: %(message)s"
+                )
             },
         },
         'handlers': {
@@ -278,3 +274,14 @@ class TestConfig(Config):
             'handlers': ['default'],
         },
     }
+
+
+CONFIGS = {
+    'production': ProductionConfig,
+    'development': DevelopmentConfig,
+    'test': TestConfig,
+}
+
+
+def get_config(name):
+    return CONFIGS.get(name.strip().lower(), ProductionConfig)

@@ -83,7 +83,7 @@ def play():
     level = flask.request.form.get('level')
     data = number_distance.play(level)
     if not data:
-        flask.abort(status=500, description=f'Unable to use: {level} as a game level.')
+        flask.abort(500, description=f'Unable to use: {level} as a game level.')
     else:
         return flask.render_template('play.html', data=data)
 
@@ -106,7 +106,7 @@ def result():
 
     result_data = number_distance.generate_result(data)
     if not result_data:
-        flask.abort(status=500, description=f'Unable to generate results from {raw_data}.')
+        flask.abort(500, description=f'Unable to generate results from {raw_data}.')
     elif result_data['outcome']:
         return flask.render_template('result_correct.html', data=result_data)
     else:

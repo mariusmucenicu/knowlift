@@ -3,56 +3,69 @@
 
 
 """
-Bundle core modules that, via their logic and/or configuration make this application possible.
+Bundle core modules whose logic and configuration power this application.
 
 Functions:
 ==========
-    create_app: Create and configure a flask application.
+    create_app: Create and configure a Flask application.
 
 Modules:
 ========
     db: Store logic that enables database interaction.
-    lexicon: Implement a mechanism for building sentences from a given lexicon.
-    models: Define entities (tables/relations) and relationships among them.
-    number_distance: Build mathematical intervals based on upper and lower bounds.
+    lexicon: Build sentences from a given lexicon.
+    models: Define entities and relationships among them.
+    number_distance: Build mathematical intervals from upper and lower bounds.
     views: Handle HTTP requests.
 
 Notes:
 ======
-    This package is intended to bundle all of the core functionality of this application.
+    This package bundles the core functionality of this application.
 
 Miscellaneous objects:
 ======================
-    Except for the public objects exported by this module and their public APIs (if applicable),
-        everything else is an implementation detail, and shouldn't be relied upon as it may change
-        over time.
+    Except for the public objects exported by this module and their
+    public APIs (if applicable), everything else is an implementation
+    detail and shouldn't be relied upon, as it may change over time.
 """
 
 # Standard Library
-from logging import config
+import os
+from logging import config as logging_config
 
 # Third-party
 import flask
 
 # Project specific
+import default_settings
 from knowlift import db
 from knowlift import views
 
 
-def create_app():
+def create_app(env=None):
     """
-    Configure, register and return a Flask application.
+    Configure, register, and return the Flask application.
 
-    :return: A flask object which implements a WSGI application and acts as the central object.
-    :rtype: flask.app.Flask
+    Configuration precedence (low → high):
+        1. Environment base class (Production/Development/Test)
+        2. instance/settings.py (if present)
+        3. Prefixed environment variables (KNOWLIFT_*) — highest precedence
+
+    Args:
+        env (str | None):
+            Environment name ('development', 'production', or 'test').
+            If None, uses KNOWLIFT_ENV or defaults to 'production'.
+
+    Returns:
+        flask.app.Flask: The Flask WSGI application instance.
     """
     app = flask.Flask(__name__, instance_relative_config=True)
 
-    flask_environment = f'{app.env.capitalize()}Config'
-    app.config.from_object(f'default_settings.{flask_environment}')
+    app_environment = env or os.getenv('KNOWLIFT_ENV', 'production')
+    app.config.from_object(default_settings.get_config(app_environment))
     app.config.from_pyfile('settings.py', silent=True)
+    app.config.from_prefixed_env()
 
-    config.dictConfig(app.config['LOGGING_CONFIG'])
+    logging_config.dictConfig(app.config['LOGGING_CONFIG'])
 
     db.init_db(app)
 

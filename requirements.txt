@@ -1,6 +1,5 @@
 flake8==3.7.8
-flask==1.1.4
+flask==3.1.1
 pylint==2.3.1
 SQLAlchemy==2.0.42
-MarkupSafe<2.1
 coverage==5
