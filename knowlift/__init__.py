@@ -12,7 +12,6 @@ Functions:
 Modules:
 ========
     db: Store logic that enables database interaction.
-    lexicon: Build sentences from a given lexicon.
     models: Define entities and relationships among them.
     number_distance: Build mathematical intervals from upper and lower bounds.
     views: Handle HTTP requests.
