@@ -39,8 +39,8 @@ Encapsulates o series of interactive games with the purpose of increasing one's 
   <tr>
     <th>Code of Conduct</th>
     <td colspan="2" align="center">
-      <a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">
-        <img src="https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg"></a>
+      <a href="https://www.contributor-covenant.org/version/3/0/code_of_conduct">
+        <img src="https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg"></a>
     </td>
   </tr>
   <tr>
