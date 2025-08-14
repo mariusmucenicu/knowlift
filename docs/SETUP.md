@@ -7,12 +7,12 @@
 
 ### 📦 Step 2: Install dependencies
 ```
-pip install -r requirements.txt
+uv sync --locked
 ```
 
 ### ✅ Step 3: Run the test suite
 ```
-python -m unittest discover
+uv run python -m unittest discover
 ```
 This command should show absolutely no errors.
 
@@ -22,19 +22,19 @@ Pick the runtime environment by setting the env var `KNOWLIFT_ENV`.
 #### Windows (Command Prompt)
 ```
 set KNOWLIFT_ENV=development
-flask run
+uv run flask run
 ```
 
 #### Windows (PowerShell)
 ```
 $env:KNOWLIFT_ENV = "development"
-flask run
+uv run flask run
 ```
 
 #### Unix
 ```
 export KNOWLIFT_ENV=development
-flask run
+uv run flask run
 ```
 
 Open your favourite browser at http://127.0.0.1:5000/ and give it a try 🎉
