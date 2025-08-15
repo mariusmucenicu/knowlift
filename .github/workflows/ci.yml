@@ -61,7 +61,12 @@ jobs:
       - name: Run tests and collect coverage
         run: uv run coverage run --source=knowlift,tests -m unittest discover
 
+      - name: Generate XML report
+        run: uv run coverage xml -o coverage.xml
+
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
