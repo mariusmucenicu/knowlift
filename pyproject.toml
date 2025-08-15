@@ -5,7 +5,7 @@ description = "Interactive games designed to enhance cognitive skills"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "coverage==5",
+    "coverage==7.10.3",
     "flake8==3.7.8",
     "flask==3.1.1",
     "pylint==2.3.1",
