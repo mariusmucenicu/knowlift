@@ -1,7 +1,7 @@
 # Setup
 
 ### 🔧 Step 1: Prerequisites
-+ Make sure you have any Python 3.11+ version installed.
++ Make sure you have any Python in the range [3.11, 3.13] installed.
 + Clone or download this repository.
 + Change directory into the project root.
 
