@@ -21,7 +21,7 @@ When [reporting a bug][issues], please include:
 
 When [proposing a feature][issues]:
 + Describe the **problem** and the **proposed solution**.  
- Keep the **scope narrow** to make it easier to implement.  
++ Keep the **scope narrow** to make it easier to implement.  
 
 
 ## 🔀 Pull Requests
