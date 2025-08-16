@@ -1,79 +1,72 @@
 # Knowlift
 
-Encapsulates o series of interactive games with the purpose of increasing one's mood. **:iphone: :computer: friendly**
+A set a series of interactive games with the purpose of increasing one's mood.  
+Works great on **both phones 📱 and computers 💻**.
 
-<table>
-  <tr>
-    <th rowspan="2">State</th>
-    <th>Branch</th>
-    <th>Status</th>
-  </tr>
-  <tr>
-    <td>Master</td>
-    <td>
-      <a href="https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml?query=branch%3Amaster">
-        <img src="https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml/badge.svg"></a>
-    </td>
-  </tr>
-  <tr>
-    <th>Measurements</th>
-    <td colspan="2" align="center">
-      <a href="https://codecov.io/gh/mariusmucenicu/knowlift">
-        <img src="https://codecov.io/gh/mariusmucenicu/knowlift/branch/master/graph/badge.svg"></a>
-    </td>
-  </tr>
-  <tr>
-    <th>To do</th>
-    <td colspan="2" align="center">
-      <a href="https://github.com/mariusmucenicu/knowlift/issues">
-        <img src="https://img.shields.io/github/issues/mariusmucenicu/knowlift.svg"></a>
-    </td>
-  </tr>
-  <tr>
-    <th>Progress</th>
-    <td colspan="2" align="center">
-      <a href="https://github.com/mariusmucenicu/knowlift/compare/1.1.0...master">
-        <img src="https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/1.1.0.svg"></a>
-    </td>
-  </tr>
-  <tr>
-    <th>Code of Conduct</th>
-    <td colspan="2" align="center">
-      <a href="https://www.contributor-covenant.org/version/3/0/code_of_conduct">
-        <img src="https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg"></a>
-    </td>
-  </tr>
-  <tr>
-    <th>License</th>
-    <td colspan="2" align="center">
-      <a href="https://www.gnu.org/licenses/agpl-3.0">
-        <img src="https://img.shields.io/badge/License-AGPL_v3-blue.svg"></a>
-    </td>
-  </tr>
-</table>
+## 📊 Project Status
 
-## Contents
-+ [Development](https://github.com/mariusmucenicu/knowlift#development)
-+ [How can I contribute?](https://github.com/mariusmucenicu/knowlift#how-can-i-contribute)
-+ [Versioning](https://github.com/mariusmucenicu/knowlift#versioning)
-+ [Code of conduct](https://github.com/mariusmucenicu/knowlift#code-of-conduct)
+| Category           | Badge |
+|--------------------|-------|
+| **Branch**         | [![CI][ci-badge]][ci-link] |
+| **Coverage**       | [![Coverage][cov-badge]][cov-link] |
+| **Open Issues**    | [![Issues][issues-badge]][issues-link] |
+| **Progress**       | [![Commits][commits-badge]][commits-link] |
+| **Code of Conduct**| [![Covenant][covenant-badge]][covenant-link] |
+| **License**        | [![License][license-badge]][license-link] |
 
-## Development
-In order to get the project started locally, follow the [setup instructions](https://github.com/mariusmucenicu/knowlift/blob/master/docs/SETUP.md).
+## 📖 Contents
 
-## How can I contribute?
-Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.  
+- [Development](#-development)  
+- [Contributing](#-contributing)  
+- [Versioning](#-versioning)  
+- [Code of Conduct](#-code-of-conduct)  
 
-- Before opening an **issue** or **pull request**, please make sure to read the [contribution guidelines](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CONTRIBUTING.md).
-- **Performance**: This is just a fun project, but responses shouldn't take seconds.
+## 🛠 Development
 
-## Versioning
-This project adheres to [SemVer](http://semver.org/) for versioning.
-For the versions available, see the [tags on this repository](https://github.com/mariusmucenicu/knowlift/tags).
+To get the project running locally, follow the [setup instructions][setup].
 
-- New **major** versions are exceptional and are planned very long in advance.
-- New **minor** versions are feature releases; they get released more frequently.
-- New **patch** versions are bug fix releases; they get released as needed.
+## 🤝 Contributing
 
-## Code of conduct
-This project adheres to the Contributor Covenant [code of conduct](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+Contributions are welcome and greatly appreciated! 🙌  
+Every little bit helps, and credit will always be given.  
+
+- Read the [contribution guidelines][contributing] before opening issues or PRs.
+
+## 📦 Versioning
+
+This project follows [Semantic Versioning (SemVer)][semver].  
+See available versions under the [repository tags][tags].  
+
+- **Major**: Rare, planned well in advance.  
+- **Minor**: Feature releases, shipped more frequently.  
+- **Patch**: Bug fixes, released as needed.  
+
+## 🧑‍🤝‍🧑 Code of Conduct
+
+We follow the [Contributor Covenant][coc].  
+By participating, you are expected to uphold this code.  
+
+
+[ci-badge]: https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml/badge.svg
+[ci-link]: https://github.com/mariusmucenicu/knowlift/actions/workflows/ci.yml?query=branch%3Amaster
+
+[cov-badge]: https://codecov.io/gh/mariusmucenicu/knowlift/branch/master/graph/badge.svg
+[cov-link]: https://codecov.io/gh/mariusmucenicu/knowlift
+
+[issues-badge]: https://img.shields.io/github/issues/mariusmucenicu/knowlift.svg
+[issues-link]: https://github.com/mariusmucenicu/knowlift/issues
+
+[commits-badge]: https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/1.1.0.svg
+[commits-link]: https://github.com/mariusmucenicu/knowlift/compare/1.1.0...master
+
+[covenant-badge]: https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg
+[covenant-link]: https://www.contributor-covenant.org/version/3/0/code_of_conduct
+
+[license-badge]: https://img.shields.io/badge/License-AGPL_v3-blue.svg
+[license-link]: https://www.gnu.org/licenses/agpl-3.0
+
+[setup]: ./SETUP.md
+[contributing]: ./CONTRIBUTING.md
+[coc]: ./CODE_OF_CONDUCT.md
+[tags]: https://github.com/mariusmucenicu/knowlift/tags
+[semver]: https://semver.org
