@@ -1,7 +1,10 @@
 # Setup
 
 ### 🔧 Step 1: Prerequisites
-+ Make sure you have any Python in the range [3.11, 3.13] installed.
++ Ensure you have any of the **Python 3.11, 3.12, or 3.13** versions installed.
+  + If you don't, download one from [here][python-downloads].
++ Ensure you have the **uv package manager** installed.  
+  + If you don’t, install it by following the steps [here][uv-install].
 + Clone or download this repository.
 + Change directory into the project root.
 
@@ -38,3 +41,7 @@ uv run flask run
 ```
 
 Open your favourite browser at http://127.0.0.1:5000/ and give it a try 🎉
+
+
+[python-downloads]: https://www.python.org/downloads/
+[uv-install]: https://docs.astral.sh/uv/getting-started/installation/

@@ -1,46 +1,38 @@
-## Issues and Pull requests
-- If you want to file an issue please [perform a search](https://github.com/mariusmucenicu/knowlift/issues) to check whether anything similar already exists.
-  - If it does, add a comment to the existing issue instead of opening a new one.
-  - If there are multiple related issues, please reference them in the one you're commenting so that we can close the duplicates and keep the [issue board](https://github.com/mariusmucenicu/knowlift/issues) as organized and relevant as possible.
-- Please don't file an issue to ask a question. For any questions feel free to <a href="mailto:marius_mucenicu@yahoo.com">contact the author</a>.
+# Contributing
 
-### Bug reports
-When [reporting a bug](https://github.com/mariusmucenicu/knowlift/issues) please include:
-- Your device name and version, e.g `Samsung Galaxy S9, G960F` or `MacBook Pro (Retina, Mid 2015)`.
-- Your operating system name and version, e.g `macOS Mojave, Version 10.14.1`.
-- Your client name and version, e.g `Google Chrome, Version 70.0.3538.77`.
-- Detailed steps to reproduce the bug and any other details that might be helpful in troubleshooting.
+Thanks for considering contributing to **Knowlift** 🙌  
 
-### Feature requests
-When [proposing a feature](https://github.com/mariusmucenicu/knowlift/issues):
-- Explain in detail how it would work.
-- Keep the scope as narrow as possible, to make it easier to implement.
+## 🐞 Issues
 
-### Pull requests
-- Before submitting a pull request, please make sure you read the project's [Code style guidelines](https://github.com/mariusmucenicu/knowlift/blob/master/docs/CONTRIBUTING.md#code-style-guidelines) below.
-- After submitting a pull request, verify that all [status checks](https://help.github.com/articles/about-status-checks/) are passing.
-- After submitting a pull request, the reviewer(s) may ask you to complete additional work before your pull request can be ultimately accepted.
++ **📋 Before opening an issue**, please check the [existing issues][issues].  
+  + If you find a match, add a comment instead of opening a duplicate.  
++ Don’t open an issue to ask a question 🙋, just reach out via [email][contact].
 
-## Code style guidelines
+## 🐛 Bug Reports
 
-### Git style guide
-+ This project follows [Udacity's Git Commit Message Style Guide](https://udacity.github.io/git-styleguide/).
-+ This project uses `git rebase` (instead of `git merge`) as the main method for integrating changes into master.
+When [reporting a bug][issues], please include:
++ **📱 Device / model** (e.g., `Samsung Galaxy S25 Ultra`, `MacBook Pro 2025`).  
++ **💿 OS & version** (e.g., `Android 16`, `macOS 26`).  
++ **🌐 Client & version** (e.g., `Chrome 127`, `Safari 17`).  
++ **⚡ Steps to reproduce**, expected vs. actual behavior.  
++ Any **📝 logs, 📸 screenshots, or a minimal repro** if possible.
 
-### Back-end style guide
-+ This project follows [PEP8](https://www.python.org/dev/peps/pep-0008/) **very strictly** enforced with [Google's Python Style Guide](https://github.com/google/styleguide/blob/gh-pages/pyguide.md).  
-Don't believe me? skim read throught the sources.
+## 💡 Feature Requests
 
-### Front-end style guide
+When [proposing a feature][issues]:
++ Describe the **problem** and the **proposed solution**.  
++ Keep the **scope narrow** to make easier to implement.  
 
-#### HTML/CSS
-+ This project follows [Google's HTML/CSS Style Guide](https://google.github.io/styleguide/htmlcssguide.html) enforced with [W3C's HTML/CSS Style Guide](https://www.w3schools.com/html/html5_syntax.asp).
-+ This project follows the [BEM](http://getbem.com/) naming convention.
 
-#### JavaScript
-+ This project follows [Google's JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html) enforced with [W3C's JavaScript Style Guide](https://www.w3schools.com/js/js_conventions.asp).
+## 🔀 Pull Requests
 
-In order for your changes to be **pulled into master** do the following:
-1. Read the style guides above.
-2. Read the style guides above **again**.
-3. Repeat 1 & 2 until everything is flawless.
++ Read the **[Code Style Guide][style-guide]** before submitting a pull request.  
++ **Rebase** onto the [latest `master`][latest-master] before opening your PR.  
++ Ensure all **[status checks][status-checks]** pass (tests, linting, etc.).  
+
+
+[issues]: https://github.com/mariusmucenicu/knowlift/issues
+[contact]: mailto:marius_mucenicu@yahoo.com
+[status-checks]: https://help.github.com/articles/about-status-checks/
+[style-guide]: ./STYLE_GUIDE.md
+[latest-master]: https://github.com/mariusmucenicu/knowlift/tree/master
