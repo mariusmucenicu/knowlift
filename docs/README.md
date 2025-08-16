@@ -1,6 +1,6 @@
 # Knowlift
 
-A set a series of interactive games with the purpose of increasing one's mood.  
+A series of interactive games designed to boost your mood.  
 Works great on **both phones 📱 and computers 💻**.
 
 ## 📊 Project Status
