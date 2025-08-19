@@ -41,7 +41,7 @@ See available versions under the [repository tags][tags].
 - **Minor**: Feature releases, shipped more frequently.  
 - **Patch**: Bug fixes, released as needed.  
 
-## 🧑‍🤝‍🧑 Code of Conduct
+## 📜 Code of Conduct
 
 We follow the [Contributor Covenant][coc].  
 By participating, you are expected to uphold this code.  
