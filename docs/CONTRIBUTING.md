@@ -34,5 +34,5 @@ When [proposing a feature][issues]:
 [issues]: https://github.com/mariusmucenicu/knowlift/issues
 [contact]: mailto:marius_mucenicu@yahoo.com
 [status-checks]: https://help.github.com/articles/about-status-checks/
-[style-guide]: ./STYLE_GUIDE.md
+[style-guide]: /docs/STYLE_GUIDE.md
 [latest-master]: https://github.com/mariusmucenicu/knowlift/tree/master
