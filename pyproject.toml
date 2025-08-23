@@ -10,3 +10,10 @@ dependencies = [
     "sqlalchemy==2.0.42",
     "ruff==0.12.9",
 ]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
