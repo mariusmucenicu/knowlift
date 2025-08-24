@@ -35,9 +35,9 @@ from logging import config as logging_config
 import flask
 
 # Project specific
-import default_settings
 from knowlift import db
 from knowlift import views
+from knowlift.core import settings
 
 
 def create_app(env=None):
@@ -46,7 +46,7 @@ def create_app(env=None):
 
     Configuration precedence (low → high):
         1. Environment base class (Production/Development/Test)
-        2. instance/settings.py (if present)
+        2. instance/local_settings.py (if present)
         3. Prefixed environment variables (KNOWLIFT_*) — highest precedence
 
     Args:
@@ -60,9 +60,9 @@ def create_app(env=None):
     app = flask.Flask(__name__, instance_relative_config=True)
 
     app_environment = env or os.getenv('KNOWLIFT_ENV', 'production')
-    app.config.from_object(default_settings.get_config(app_environment))
-    app.config.from_pyfile('settings.py', silent=True)
-    app.config.from_prefixed_env()
+    app.config.from_object(settings.get_config(app_environment))
+    app.config.from_pyfile('local_settings.py', silent=True)
+    app.config.from_prefixed_env(prefix='KNOWLIFT')
 
     logging_config.dictConfig(app.config['LOGGING_CONFIG'])
 
