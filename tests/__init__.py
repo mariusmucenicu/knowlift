@@ -25,11 +25,11 @@ import os
 
 # Project specific
 import knowlift
-import default_settings
+from knowlift.core import settings
 
 try:
-    os.unlink(default_settings.TestConfig.DATABASE)
+    os.unlink(settings.TestConfig.DATABASE)
 except FileNotFoundError as ex:
-    logging.error(f'Failed to delete the database. {ex}')
+    logging.debug(f'Failed to delete the database. {ex}')
 finally:
     TEST_APPLICATION = knowlift.create_app('test')
