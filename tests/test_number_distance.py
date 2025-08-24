@@ -1,23 +1,42 @@
 """
-Test knowlift.number_distance functionality.
+Unit tests for knowlift.domain.number_distance.
 
-Functions:
-==========
-    test_calculate_statistics: Test knowlift.number_distance.calculate_statistics functionality.
-    test_change_game_level: Test knowlift.number_distance.change_game_level functionality.
-    test_fetch_game_level: Test knowlift.number_distance.fetch_game_level functionality.
-    test_generate_result: Test knowlift.number_distance.generate_result functionality.
-    test_prettify_number: Test knowlift.number_distance.prettify_number functionality.
+Classes
+-------
+- TestIntervalOperations: Tests interval operations and result logic.
 """
 
 # Standard library
 import unittest
 
 # Project specific
-from knowlift import number_distance
+from knowlift.domain import number_distance
 
 
 class TestIntervalOperations(unittest.TestCase):
+    """
+    Unit tests for interval operations and result logic.
+
+    Methods
+    -------
+    - test_calculate_statistics:
+        Test correct/incorrect stats calculation.
+
+    - test_change_game_level:
+        Test game difficulty level changes.
+
+    - test_fetch_game_level:
+        Test fetching game level by index/input.
+
+    - test_generate_result_correct_values:
+        Test result generation for valid intervals.
+
+    - test_generate_result_incorrect_values:
+        Test result generation for invalid intervals.
+
+    - test_prettify_number:
+        Test number formatting for readability.
+    """
 
     def setUp(self):
         self.metadata = (
