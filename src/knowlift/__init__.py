@@ -13,7 +13,6 @@ Modules:
 ========
     db: Store logic that enables database interaction.
     models: Define entities and relationships among them.
-    number_distance: Build mathematical intervals from upper and lower bounds.
     views: Handle HTTP requests.
 
 Notes:

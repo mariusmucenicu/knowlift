@@ -36,7 +36,7 @@ import json
 import flask
 
 # Project specific
-from knowlift import number_distance
+from knowlift.domain import number_distance
 
 logger = logging.getLogger(__name__)
 
