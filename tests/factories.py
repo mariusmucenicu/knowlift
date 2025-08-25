@@ -43,7 +43,7 @@ import sqlalchemy
 from sqlalchemy import exc
 
 # Project specific
-from knowlift import models
+from knowlift.data import models
 
 logger = logging.getLogger(__name__)
 

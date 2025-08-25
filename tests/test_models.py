@@ -27,7 +27,7 @@ from sqlalchemy import exc
 # Project specific
 import tests
 
-from knowlift import models
+from knowlift.data import models
 from tests import factories
 
 
