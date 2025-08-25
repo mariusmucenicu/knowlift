@@ -8,7 +8,7 @@ CONSTANTS:
 Modules:
 ========
     factories: Implement model factories.
-    test_models: Test knowlift.models functionality.
+    test_models: Test knowlift.data.models functionality.
     test_number_distance: Test knowlift.domain.number_distance functionality.
     test_web: Test bin.webapp functionality.
 
