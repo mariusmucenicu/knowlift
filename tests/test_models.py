@@ -25,9 +25,8 @@ import sqlalchemy
 from sqlalchemy import exc
 
 # Project specific
-import tests
-
-from knowlift import models
+import knowlift
+from knowlift.data import models
 from tests import factories
 
 
@@ -62,7 +61,8 @@ class UserModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.engine = tests.TEST_APPLICATION.config['DATABASE_ENGINE']
+        app = knowlift.create_app('test')
+        cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
         super().setUp()
@@ -180,6 +180,13 @@ class UserModelTests(unittest.TestCase):
         self.connection.close()
         super().tearDown()
 
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            cls.engine.dispose()
+        finally:
+            super().tearDownClass()
+
 
 class CountryModelTests(unittest.TestCase):
     """
@@ -211,7 +218,8 @@ class CountryModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.engine = tests.TEST_APPLICATION.config['DATABASE_ENGINE']
+        app = knowlift.create_app('test')
+        cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
         super().setUp()
@@ -337,3 +345,10 @@ class CountryModelTests(unittest.TestCase):
         self.assertEqual(count_result.count_1, delete_result.rowcount)
         self.connection.close()
         super().tearDown()
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            cls.engine.dispose()
+        finally:
+            super().tearDownClass()

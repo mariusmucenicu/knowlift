@@ -1,16 +1,14 @@
 """
 Test web related functionality (views, templates, overall interaction, etc.)
 
-CONSTANTS:
-==========
-    HTTP_CLIENT: A Python class that acts as a dummy Web browser, allowing you to test your views.
-
 Functions:
 ==========
     check_membership: Check if all the elements of a given array are found in a target string.
 
 Classes:
 ========
+    TestAppFactory: Test the app factory for creating Flask application instances.
+    TestDBConnection: Test the database connection handling.
     TestIndexPage: Test the requests going under /index
     TestAboutPage: Test the requests going under /about
     TestCustomInternalErrorPage: Test the requests that the server failed to fulfil
@@ -25,11 +23,13 @@ Classes:
 # Standard library
 import json
 import unittest
+from unittest import mock
+
+# Third-party
+import flask
 
 # Project specific
-import tests
-
-HTTP_CLIENT = tests.TEST_APPLICATION.test_client()
+import knowlift
 
 
 def check_membership(text, *strings):
@@ -39,6 +39,73 @@ def check_membership(text, *strings):
     return True
 
 
+class TestAppFactory(unittest.TestCase):
+    """Test the app factory for creating Flask application instances."""
+
+    def test_create_app_no_env(self):
+        """Test creating the app without specifying an environment."""
+        app = knowlift.create_app()
+        self.assertIsInstance(app, flask.Flask)
+        self.assertFalse(app.debug)
+
+    def test_create_app_with_env(self):
+        """Test creating the app with a specific environment."""
+        for env in ['production', 'development', 'test']:
+            with self.subTest(env=env):
+                app = knowlift.create_app(env=env)
+                self.assertIsInstance(app, flask.Flask)
+                if env == 'development':
+                    self.assertTrue(app.debug)
+                else:
+                    self.assertFalse(app.debug)
+
+
+class TestDBConnection(unittest.TestCase):
+    """Test the database connection handling."""
+
+    def setUp(self):
+        """Set up a test app context."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+
+    def tearDown(self):
+        """Tear down the test app context."""
+        self.app_context.pop()
+
+    def test_get_connection_outside_context(self):
+        """Test that getting a connection outside of an app context raises an error."""
+        self.app_context.pop()
+        with self.assertRaises(RuntimeError):
+            knowlift.get_connection()
+        self.app_context.push()
+
+    def test_get_and_close_connection(self):
+        """Test getting and closing a database connection within an app context."""
+        with self.app.test_request_context():
+            self.assertIsNone(getattr(flask.g, 'db', None))
+
+            conn = knowlift.get_connection()
+            self.assertIsNotNone(conn)
+            self.assertIn('db', flask.g)
+
+            same_conn = knowlift.get_connection()
+            self.assertIs(conn, same_conn)
+
+        self.assertIsNone(getattr(flask.g, 'db', None))
+
+    @mock.patch('knowlift.flask.current_app.logger')
+    @mock.patch('knowlift.views.number_distance.play')
+    def test_close_connection_on_exception(self, play_mock, logger_mock):
+        """Test that the connection is closed when an exception occurs."""
+        play_mock.side_effect = Exception("This is a test exception")
+        self.app.testing = False
+        response = self.client.post('/play')
+        self.assertEqual(response.status_code, 500)
+        logger_mock.error.assert_called()
+
+
 class TestIndexPage(unittest.TestCase):
     """
     Methods:
@@ -46,8 +113,13 @@ class TestIndexPage(unittest.TestCase):
         test_get_index_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_index_page(self):
-        response = HTTP_CLIENT.get('/')
+        response = self.client.get('/')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Welcome to the fascinating world of arithmetic',
@@ -85,8 +157,13 @@ class TestAboutPage(unittest.TestCase):
         test_get_about_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_about_page(self):
-        response = HTTP_CLIENT.get('/about')
+        response = self.client.get('/about')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'About',
@@ -106,6 +183,9 @@ class TestCustomInternalErrorPage(unittest.TestCase):
     """
 
     def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
         self.payload = {
             'left_glyph': '[',
             'right_glyph': ')',
@@ -119,7 +199,7 @@ class TestCustomInternalErrorPage(unittest.TestCase):
 
     def test_yield_custom_internal_error_page(self):
         data = {'data': json.dumps(self.payload)}
-        response = HTTP_CLIENT.post('/result', data=data)
+        response = self.client.post('/result', data=data)
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Oops! It looks like',
@@ -143,8 +223,13 @@ class TestCustomNotFoundPage(unittest.TestCase):
         test_get_custom_not_found_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_custom_not_found_page(self):
-        response = HTTP_CLIENT.get('/bogus')
+        response = self.client.get('/bogus')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Oops! It looks like',
@@ -168,8 +253,13 @@ class TestGradePage(unittest.TestCase):
         test_get_grade_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_grade_page(self):
-        response = HTTP_CLIENT.get('/grade')
+        response = self.client.get('/grade')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Please choose one of the following difficulties',
@@ -196,8 +286,13 @@ class TestLadderPage(unittest.TestCase):
         test_get_ladder_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_ladder_page(self):
-        response = HTTP_CLIENT.get('/ladder')
+        response = self.client.get('/ladder')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Ladder',
@@ -216,8 +311,13 @@ class TestLegalPage(unittest.TestCase):
         test_get_legal_page()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_legal_page(self):
-        response = HTTP_CLIENT.get('/legal')
+        response = self.client.get('/legal')
         response_body = response.get_data(as_text=True)
         expected_items = (
             'border-stretch',
@@ -259,14 +359,19 @@ class TestPlayPage(unittest.TestCase):
         test_play_post_valid_data()
     """
 
+    def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
+
     def test_get_not_allowed(self):
-        response = HTTP_CLIENT.get('/play')
+        response = self.client.get('/play')
         self.assertEqual(response.status_code, 405)
 
     def test_play_post_with_incorrect_values(self):
         invalid_values = ('a', 12)
         for value in invalid_values:
-            response = HTTP_CLIENT.post('/play', data={'level': value})
+            response = self.client.post('/play', data={'level': value})
             response_body = response.get_data(as_text=True)
             expected_items = (
                 'Oops! It looks like',
@@ -284,7 +389,7 @@ class TestPlayPage(unittest.TestCase):
 
     def test_play_post_valid_data(self):
         data = {'level': 0}
-        response = HTTP_CLIENT.post('/play', data=data)
+        response = self.client.post('/play', data=data)
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Submit answer',
@@ -322,6 +427,9 @@ class TestResultPage(unittest.TestCase):
     """
 
     def setUp(self):
+        """Set up a test app and client."""
+        self.app = knowlift.create_app(env='test')
+        self.client = self.app.test_client()
         self.post_data = {
             'left_glyph': '[',
             'right_glyph': ')',
@@ -335,7 +443,7 @@ class TestResultPage(unittest.TestCase):
 
     def test_post_result_correct_answer(self):
         data = {'data': json.dumps(self.post_data)}
-        response = HTTP_CLIENT.post('/result', data=data)
+        response = self.client.post('/result', data=data)
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Correct!',
@@ -348,7 +456,7 @@ class TestResultPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
     def test_result_get_not_allowed(self):
-        response = HTTP_CLIENT.get('/result')
+        response = self.client.get('/result')
         self.assertEqual(response.status_code, 405)
 
     def test_post_result_incorrect_answer(self):
@@ -360,7 +468,7 @@ class TestResultPage(unittest.TestCase):
         }
         self.post_data.update(incorrect_values)
         data = {'data': json.dumps(self.post_data)}
-        response = HTTP_CLIENT.post('/result', data=data)
+        response = self.client.post('/result', data=data)
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Incorrect!',
@@ -387,7 +495,7 @@ class TestResultPage(unittest.TestCase):
         }
         self.post_data.update(erroneous_values)
         data = {'data': json.dumps(self.post_data)}
-        response = HTTP_CLIENT.post('/result', data=data)
+        response = self.client.post('/result', data=data)
         response_body = response.get_data(as_text=True)
         expected_items = (
             'Oops! It looks like',
