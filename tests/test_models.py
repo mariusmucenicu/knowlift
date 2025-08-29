@@ -25,7 +25,7 @@ import sqlalchemy
 from sqlalchemy import exc
 
 # Project specific
-import knowlift
+from knowlift import web
 from knowlift.data import models
 from tests import factories
 
@@ -61,7 +61,7 @@ class UserModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        app = knowlift.create_app('test')
+        app = web.create_app('test')
         cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
@@ -218,7 +218,7 @@ class CountryModelTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        app = knowlift.create_app('test')
+        app = web.create_app('test')
         cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
