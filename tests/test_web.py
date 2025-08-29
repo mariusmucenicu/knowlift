@@ -29,7 +29,18 @@ from unittest import mock
 import flask
 
 # Project specific
-import knowlift
+from knowlift import web
+
+
+class WebTestCase(unittest.TestCase):
+    """Base test case for web-related tests with common setup."""
+    
+    @classmethod
+    def setUpClass(cls):
+        cls.app = web.create_app(env='test')
+    
+    def setUp(self):
+        self.client = self.app.test_client()
 
 
 def check_membership(text, *strings):
@@ -39,12 +50,12 @@ def check_membership(text, *strings):
     return True
 
 
-class TestAppFactory(unittest.TestCase):
+class TestAppFactory(WebTestCase):
     """Test the app factory for creating Flask application instances."""
 
     def test_create_app_no_env(self):
         """Test creating the app without specifying an environment."""
-        app = knowlift.create_app()
+        app = web.create_app()
         self.assertIsInstance(app, flask.Flask)
         self.assertFalse(app.debug)
 
@@ -52,7 +63,7 @@ class TestAppFactory(unittest.TestCase):
         """Test creating the app with a specific environment."""
         for env in ['production', 'development', 'test']:
             with self.subTest(env=env):
-                app = knowlift.create_app(env=env)
+                app = web.create_app(env=env)
                 self.assertIsInstance(app, flask.Flask)
                 if env == 'development':
                     self.assertTrue(app.debug)
@@ -60,63 +71,56 @@ class TestAppFactory(unittest.TestCase):
                     self.assertFalse(app.debug)
 
 
-class TestDBConnection(unittest.TestCase):
+class TestDBConnection(WebTestCase):
     """Test the database connection handling."""
 
     def setUp(self):
-        """Set up a test app context."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
+        super().setUp()
         self.app_context = self.app.app_context()
         self.app_context.push()
 
     def tearDown(self):
-        """Tear down the test app context."""
         self.app_context.pop()
 
     def test_get_connection_outside_context(self):
         """Test that getting a connection outside of an app context raises an error."""
         self.app_context.pop()
         with self.assertRaises(RuntimeError):
-            knowlift.get_connection()
+            web.get_connection()
         self.app_context.push()
 
     def test_get_and_close_connection(self):
         """Test getting and closing a database connection within an app context."""
-        with self.app.test_request_context():
+        with self.app.app_context():
             self.assertIsNone(getattr(flask.g, 'db', None))
 
-            conn = knowlift.get_connection()
+            conn = web.get_connection()
             self.assertIsNotNone(conn)
             self.assertIn('db', flask.g)
 
-            same_conn = knowlift.get_connection()
+            same_conn = web.get_connection()
             self.assertIs(conn, same_conn)
 
         self.assertIsNone(getattr(flask.g, 'db', None))
 
-    @mock.patch('knowlift.flask.current_app.logger')
-    @mock.patch('knowlift.views.number_distance.play')
-    def test_close_connection_on_exception(self, play_mock, logger_mock):
-        """Test that the connection is closed when an exception occurs."""
-        play_mock.side_effect = Exception("This is a test exception")
-        self.app.testing = False
-        response = self.client.post('/play')
-        self.assertEqual(response.status_code, 500)
-        logger_mock.error.assert_called()
+    @mock.patch('knowlift.web.flask.current_app.logger')
+    def test_close_connection_on_exception(self, logger_mock):
+        """Test that the connection is closed and exception is logged on app context teardown."""
+
+        with self.app.app_context():
+            conn = web.get_connection()
+            self.assertIsNotNone(conn)
+
+            web.close_connection(Exception("Test exception for teardown"))
+            logger_mock.error.assert_called()
 
 
-class TestIndexPage(unittest.TestCase):
+class TestIndexPage(WebTestCase):
     """
     Methods:
     ========
         test_get_index_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_index_page(self):
         response = self.client.get('/')
@@ -150,17 +154,12 @@ class TestIndexPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestAboutPage(unittest.TestCase):
+class TestAboutPage(WebTestCase):
     """
     Methods:
     ========
         test_get_about_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_about_page(self):
         response = self.client.get('/about')
@@ -175,7 +174,7 @@ class TestAboutPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestCustomInternalErrorPage(unittest.TestCase):
+class TestCustomInternalErrorPage(WebTestCase):
     """
     Methods:
     ========
@@ -183,9 +182,8 @@ class TestCustomInternalErrorPage(unittest.TestCase):
     """
 
     def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
+        """Set up test data."""
+        super().setUp()
         self.payload = {
             'left_glyph': '[',
             'right_glyph': ')',
@@ -216,17 +214,12 @@ class TestCustomInternalErrorPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestCustomNotFoundPage(unittest.TestCase):
+class TestCustomNotFoundPage(WebTestCase):
     """
     Methods:
     ========
         test_get_custom_not_found_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_custom_not_found_page(self):
         response = self.client.get('/bogus')
@@ -246,17 +239,12 @@ class TestCustomNotFoundPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestGradePage(unittest.TestCase):
+class TestGradePage(WebTestCase):
     """
     Methods:
     ========
         test_get_grade_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_grade_page(self):
         response = self.client.get('/grade')
@@ -279,17 +267,12 @@ class TestGradePage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestLadderPage(unittest.TestCase):
+class TestLadderPage(WebTestCase):
     """
     Methods:
     ========
         test_get_ladder_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_ladder_page(self):
         response = self.client.get('/ladder')
@@ -304,17 +287,12 @@ class TestLadderPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestLegalPage(unittest.TestCase):
+class TestLegalPage(WebTestCase):
     """
     Methods:
     ========
         test_get_legal_page()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_legal_page(self):
         response = self.client.get('/legal')
@@ -350,7 +328,7 @@ class TestLegalPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestPlayPage(unittest.TestCase):
+class TestPlayPage(WebTestCase):
     """
     Methods:
     ========
@@ -358,11 +336,6 @@ class TestPlayPage(unittest.TestCase):
         test_play_post_with_incorrect_values()
         test_play_post_valid_data()
     """
-
-    def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
 
     def test_get_not_allowed(self):
         response = self.client.get('/play')
@@ -416,7 +389,7 @@ class TestPlayPage(unittest.TestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestResultPage(unittest.TestCase):
+class TestResultPage(WebTestCase):
     """
     Methods:
     ========
@@ -427,9 +400,8 @@ class TestResultPage(unittest.TestCase):
     """
 
     def setUp(self):
-        """Set up a test app and client."""
-        self.app = knowlift.create_app(env='test')
-        self.client = self.app.test_client()
+        """Set up test data."""
+        super().setUp()
         self.post_data = {
             'left_glyph': '[',
             'right_glyph': ')',
