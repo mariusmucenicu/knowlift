@@ -26,6 +26,6 @@ Miscellaneous objects:
 __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
 
 # Project specific
-import knowlift
+from knowlift import web
 
-application = knowlift.create_app()
+application = web.create_app()
