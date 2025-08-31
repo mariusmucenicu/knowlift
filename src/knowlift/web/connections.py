@@ -35,7 +35,7 @@ def get_db_connection():
     This function manages database connections using Flask's application
     context (flask.g). If a connection doesn't exist in the current context,
     it creates a new one using the database engine stored in the Flask
-    application configuration.
+    application configuration and starts a transaction.
 
     Returns:
         sqlalchemy.Connection:
@@ -48,12 +48,13 @@ def get_db_connection():
             If called outside of a Flask application context.
 
     Note:
-        The connection is automatically stored in flask.g and will be reused
-        for subsequent calls within the same request context.
+        The connection and transaction are automatically stored in flask.g and
+        will be reused for subsequent calls within the same request context.
     """
     if 'db' not in flask.g:
         engine = flask.current_app.config['DATABASE_ENGINE']
         flask.g.db = engine.connect()
+        flask.g.db_transaction = flask.g.db.begin()
         return flask.g.db
     else:
         return flask.g.db
@@ -64,8 +65,8 @@ def close_db_connection(exception):
     Return the underlying DB API connection to the connection pool.
 
     This function is typically used as a Flask teardown handler to ensure
-    database connections are properly closed at the end of each request,
-    preventing connection leaks.
+    database connections and transactions are properly closed at the end of each
+    request, preventing connection leaks.
 
     Args:
         exception (Exception | None):
@@ -75,13 +76,17 @@ def close_db_connection(exception):
     """
     logger = flask.current_app.logger
 
-    if exception:
-        logger.error(
-            "Exception occurred during request: %s, cleaning up the db conn.",
-            exception
-        )
-
+    transaction = flask.g.pop('db_transaction', None)
     db = flask.g.pop('db', None)
+
+    if transaction is not None:
+        if exception is None:
+            transaction.commit()
+            logger.debug("Database transaction committed")
+        else:
+            transaction.rollback()
+            logger.error("Database transaction rolled back due to: %s", exception)
+
     if db is not None:
         db.close()
     else:
