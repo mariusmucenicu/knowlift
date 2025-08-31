@@ -114,6 +114,39 @@ class TestDBConnection(WebTestCase):
             web.connections.close_db_connection(Exception("Test exception for teardown"))
             logger_mock.error.assert_called()
 
+    @mock.patch('knowlift.web.connections.flask.current_app.logger')
+    def test_transaction_cleanup_error_handling(self, logger_mock):
+        """Test that transaction cleanup errors are handled gracefully."""
+        with self.app.app_context():
+            conn = web.connections.get_db_connection()
+            self.assertIsNotNone(conn)
+
+            # Create a mock transaction that raises on commit
+            mock_transaction = mock.Mock()
+            mock_transaction.commit.side_effect = Exception("Commit failed")
+            flask.g.db_transaction = mock_transaction
+
+            web.connections.close_db_connection(None)
+
+            logger_mock.error.assert_called_with("Error during transaction cleanup: %s", mock.ANY)
+
+    @mock.patch('knowlift.web.connections.flask.current_app.logger')
+    def test_connection_close_error_handling(self, logger_mock):
+        """Test that connection close errors are handled gracefully."""
+        with self.app.app_context():
+            conn = web.connections.get_db_connection()
+            self.assertIsNotNone(conn)
+
+            # Create a mock connection that raises on close
+            mock_conn = mock.Mock()
+            mock_conn.close.side_effect = Exception("Close failed")
+            flask.g.db = mock_conn
+
+            web.connections.close_db_connection(None)
+
+            # Should log the connection close error
+            logger_mock.error.assert_called_with("Error closing database connection: %s", mock.ANY)
+
 
 class TestIndexPage(WebTestCase):
     """
