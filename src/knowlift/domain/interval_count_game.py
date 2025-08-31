@@ -5,25 +5,35 @@
 """
 Implement the interface for a simple mathematical game based on intervals.
 
-Functions:
-==========
-    calculate_statistics: Compute statistics based on amount of correct/incorrect answers.
-    change_game_level: Increment/decrement the degree of difficulty based on statistics.
-    fetch_game_level: Return a game level from a series of game levels, based on user preference.
-    generate_interval: Generate an interval within a range of two values (the lower/upper bound).
-    generate_result: Compare the user's result with the expected result for a given question.
-    play: Entry point for the game.
-    prettify_number: Split large numbers into groups of three digits to aid readability.
-    validate_form_data: Ensure the data passed in through the form matches an expected format.
-    validate_game_levels: Ensure the game levels respect certain criteria.
+Functions
+---------
+calculate_statistics
+    Compute statistics based on amount of correct/incorrect answers.
+change_game_level
+    Increment/decrement the degree of difficulty based on statistics.
+fetch_game_level
+    Return a game level from a series of game levels, based on user preference.
+generate_interval
+    Generate an interval within a range of two values (the lower/upper bound).
+generate_result
+    Compare the user's result with the expected result for a given question.
+play
+    Entry point for the game.
+prettify_number
+    Split large numbers into groups of three digits to aid readability.
+validate_form_data
+    Ensure the data passed in through the form matches an expected format.
+validate_game_levels
+    Ensure the game levels respect certain criteria.
 
-CONSTANTS:
-==========
-    GAME_LEVELS: A series of available game levels ranging in difficulty.
+Module Variables
+----------------
+GAME_LEVELS
+    A series of available game levels ranging in difficulty.
 
-Miscellaneous objects:
-======================
-    Except the above, all other objects in this module are to be considered implementation details.
+Notes
+-----
+Except the above, all other objects in this module are to be considered implementation details.
 """
 
 __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
@@ -54,13 +64,12 @@ def calculate_statistics(correct, incorrect):
     """
     Compute the statistics based on the total number of correct and incorrect answers.
 
-    Args:
-        :param correct (int): Number of correct answers.
-        :param incorrect (int): Number of incorrect answers.
-
-    Returns:
-        A tuple of length 3 of the form:
-            (total number of answers, correct percentage, incorrect percentage)
+    :param correct: Number of correct answers.
+    :type correct: int
+    :param incorrect: Number of incorrect answers.
+    :type incorrect: int
+    :return: A tuple of the form (correct percentage, incorrect percentage).
+    :rtype: tuple
     """
     total = correct + incorrect
     correct_percentage = round(correct / total * 100, 2)
@@ -72,13 +81,14 @@ def change_game_level(avg_correct, avg_incorrect, game_level):
     """
     Increase or decrease the game difficulty level based on the success rate.
 
-    Args:
-        :param avg_correct (int): Number of correct answers.
-        :param avg_incorrect (int): Number of incorrect answers.
-        :param game_level (int): Number representing the current degree of difficulty.
-
-    Returns:
-        An int, corresponding to the position of the current game level in GAME_LEVELS.
+    :param avg_correct: Number of correct answers.
+    :type avg_correct: int
+    :param avg_incorrect: Number of incorrect answers.
+    :type avg_incorrect: int
+    :param game_level: Number representing the current degree of difficulty.
+    :type game_level: int
+    :return: The position of the current game level in GAME_LEVELS.
+    :rtype: int
     """
 
     game_levels = len(GAME_LEVELS)
@@ -125,11 +135,10 @@ def generate_interval(game_level):
     """
     Generate an interval within two limits.
 
-    Args:
-        :param game_level (tuple): Upper/lower bound values from which an interval is built.
-
-    Returns:
-        A dictionary comprising the 'raw data' (metadata) used to create the mathematical interval.
+    :param game_level: Upper/lower bound values from which an interval is built.
+    :type game_level: tuple
+    :return: A dictionary comprising the 'raw data' (metadata) used to create the mathematical interval.
+    :rtype: dict
     """
     if game_level is None:
         return game_level
@@ -158,13 +167,10 @@ def generate_result(data):
     """
     Generate results based on a mathematical interval as well as a user's answer.
 
-    Args:
-        :param data (dict): A mapping containing metadata about a particular game question.
-
-    Returns:
-        A dict comprising the initial data plus the result of comparing a user's answer with the
-        expected result.
-
+    :param data: A mapping containing metadata about a particular game question.
+    :type data: dict
+    :return: A dict comprising the initial data plus the result of comparing a user's answer with the expected result.
+    :rtype: dict
     """
 
     if validate_form_data(data):
@@ -212,11 +218,10 @@ def prettify_number(number):
         65536 -> 65 536
         1000000 -> 1 000 000
 
-    Args:
-        :param number (int): Number to be formatted.
-
-    Returns:
-        A string representation of the number prettily formatted.
+    :param number: Number to be formatted.
+    :type number: int
+    :return: A string representation of the number prettily formatted.
+    :rtype: str
     """
     number = str(number)
     if len(number) <= 3:
@@ -244,13 +249,12 @@ def validate_form_data(form_data):
     """
     Make sure the form data passed in respects a certain format.
 
-    Args:
-        :param form_data (dict): Data passed through form.
+    :param form_data: Data passed through form.
+    :type form_data: dict
+    :return: True for valid data, None for invalid data.
+    :rtype: bool or None
 
-    Returns:
-        True for valid data, None for invalid data.
-
-    Notes:
+    .. note::
         This validation only ensures that the data format is consistent with what the game expects.
         It does not ensure that the values are unaltered and as a consequence one could easily trick
         the game and pass all the quiz questions by sending in desired mathematical intervals with
@@ -309,17 +313,17 @@ def validate_game_levels(game_levels):
     """
     Validate a set of game levels against a set of rules.
 
-    Args:
-        :param game_levels (tuple): A series of game levels.
+    :param game_levels: A series of game levels.
+    :type game_levels: tuple
+    :return: True if all game levels are valid, False otherwise.
+    :rtype: bool
 
-    Returns:
-        A boolean object: True if all game levels are valid, False otherwise.
-
-    Notes:
+    .. note::
         Game levels should meet the following 2 criteria:
+        
         1. Should be unique across the entire levels (not having a level appear multiple times).
         2. The game difficulties themselves should be valid mathematical intervals, i.e the lower
-            bound should not be greater than the upper bound.
+           bound should not be greater than the upper bound.
     """
 
     if not len(set(game_levels)) == len(game_levels):

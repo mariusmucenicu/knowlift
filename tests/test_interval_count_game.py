@@ -19,22 +19,17 @@ class TestIntervalOperations(unittest.TestCase):
 
     Methods
     -------
-    - test_calculate_statistics:
+    test_calculate_statistics
         Test correct/incorrect stats calculation.
-
-    - test_change_game_level:
+    test_change_game_level
         Test game difficulty level changes.
-
-    - test_fetch_game_level:
+    test_fetch_game_level
         Test fetching game level by index/input.
-
-    - test_generate_result_correct_values:
+    test_generate_result_correct_values
         Test result generation for valid intervals.
-
-    - test_generate_result_incorrect_values:
+    test_generate_result_incorrect_values
         Test result generation for invalid intervals.
-
-    - test_prettify_number:
+    test_prettify_number
         Test number formatting for readability.
     """
 

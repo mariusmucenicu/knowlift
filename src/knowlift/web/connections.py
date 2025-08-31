@@ -37,17 +37,12 @@ def get_db_connection():
     it creates a new one using the database engine stored in the Flask
     application configuration and starts a transaction.
 
-    Returns:
-        sqlalchemy.Connection:
-            A db connection object that can be used to execute SQL queries.
+    :return: A db connection object that can be used to execute SQL queries.
+    :rtype: sqlalchemy.Connection
+    :raises KeyError: If 'DATABASE_ENGINE' is not found in the Flask app config.
+    :raises RuntimeError: If called outside of a Flask application context.
 
-    Raises:
-        KeyError:
-            If 'DATABASE_ENGINE' is not found in the Flask app config.
-        RuntimeError:
-            If called outside of a Flask application context.
-
-    Note:
+    .. note::
         The connection and transaction are automatically stored in flask.g and
         will be reused for subsequent calls within the same request context.
     """
@@ -68,11 +63,10 @@ def close_db_connection(exc):
     database connections and transactions are properly closed at the end of each
     request, preventing connection leaks.
 
-    Args:
-        exc (Exception | None):
-            An exception that occurred during request processing, if any.
-            This parameter is required by Flask's teardown handler interface
-            but the function handles both success and error cases.
+    :param exc: An exception that occurred during request processing, if any.
+                This parameter is required by Flask's teardown handler interface
+                but the function handles both success and error cases.
+    :type exc: Exception or None
     """
     logger = flask.current_app.logger
 

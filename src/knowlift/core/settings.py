@@ -5,31 +5,36 @@
 """
 Store environment-based configuration (development, production, test).
 
-Classes:
-========
-    Config: Store the default configuration settings. Override per-subclass.
-    DevelopmentConfig: Store the development configuration settings.
-    ProductionConfig: Store the production configuration settings.
-    TestConfig: Store the test configuration settings.
-    ConsoleFilter: Filter out LogRecords whose levels are > logging.WARNING
-    FileFilter: Filter out LogRecords whose levels are < logging.ERROR
+Classes
+-------
+Config
+    Store the default configuration settings. Override per-subclass.
+DevelopmentConfig
+    Store the development configuration settings.
+ProductionConfig
+    Store the production configuration settings.
+TestConfig
+    Store the test configuration settings.
+ConsoleFilter
+    Filter out LogRecords whose levels are > logging.WARNING.
+FileFilter
+    Filter out LogRecords whose levels are < logging.ERROR.
 
 Notes
-=====
-    * These settings are required to be available when the application starts.
-    * Many of these settings are sensitive and must be kept confidential.
-    * There is a different configuration for each environment: prod, dev, test.
-    * The enviornments above tell Flask which context the app is running in.
-    * To switch between environments (configurations) set the KNOWLIFT_ENV env.
-    * If KNOWLIFT_ENV is not set, the default config used will be production.
-    * Do not alter settings in the application at runtime. For example,
-      don't do things like: flask.current_app.config['DEBUG'] = True
+-----
+* These settings are required to be available when the application starts.
+* Many of these settings are sensitive and must be kept confidential.
+* There is a different configuration for each environment: prod, dev, test.
+* The environments above tell Flask which context the app is running in.
+* To switch between environments (configurations) set the KNOWLIFT_ENV env.
+* If KNOWLIFT_ENV is not set, the default config used will be production.
+* Do not alter settings in the application at runtime. For example,
+  don't do things like: flask.current_app.config['DEBUG'] = True.
 
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their
-    public APIs (if applicable), everything else is an implementation
-    detail, and shouldn't be relied upon as it may change over time.
+Functions
+---------
+get_config
+    Return configuration class based on environment name.
 """
 
 # Standard library
@@ -293,4 +298,12 @@ CONFIGS = {
 
 
 def get_config(name):
+    """
+    Return configuration class based on environment name.
+    
+    :param name: Environment name ('development', 'production', or 'test').
+    :type name: str
+    :return: Configuration class for the specified environment.
+    :rtype: type
+    """
     return CONFIGS.get(name.strip().lower(), ProductionConfig)

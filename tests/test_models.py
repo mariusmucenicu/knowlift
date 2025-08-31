@@ -49,28 +49,22 @@ class UserModelTests(ModelTestCase):
     """
     Test user entity functionality including data integrity and relationships.
 
-    Methods:
-    ========
-        test_select_user():
-            Verify user record selection by ID.
-
-        test_update_user():
-            Test user record updates with new values.
-
-        test_create_duplicate_values_for_unique_fields_forbidden():
-            Ensure unique field constraints prevent duplicate user creation.
-
-        test_update_duplicate_values_for_unique_fields_forbidden():
-            Ensure unique field constraints prevent duplicate user updates.
-
-        test_create_when_required_fields_are_missing():
-            Verify required field validation during user creation.
-
-        test_create_user_in_different_country():
-            Test user creation with custom country association.
-
-        test_methods_in_docstring():
-            Validate all test methods are documented.
+    Methods
+    -------
+    test_select_user
+        Verify user record selection by ID.
+    test_update_user
+        Test user record updates with new values.
+    test_create_duplicate_values_for_unique_fields_forbidden
+        Ensure unique field constraints prevent duplicate user creation.
+    test_update_duplicate_values_for_unique_fields_forbidden
+        Ensure unique field constraints prevent duplicate user updates.
+    test_create_when_required_fields_are_missing
+        Verify required field validation during user creation.
+    test_create_user_in_different_country
+        Test user creation with custom country association.
+    test_methods_in_docstring
+        Validate all test methods are documented.
     """
 
     def setUp(self):
@@ -201,27 +195,22 @@ class CountryModelTests(ModelTestCase):
     """
     Test country entity functionality including data integrity and validation.
 
-    Methods:
-    ========
-        test_select_country():
-            Verify country record selection by ID.
-
-        test_update_country():
-            Test country record updates with new values.
-
-        test_create_duplicate_values_for_unique_fields_forbidden():
-            Ensure unique field constraints prevent duplicate country creation.
-
-        test_update_duplicate_values_for_unique_fields_forbidden():
-            Ensure unique field constraints prevent duplicate country updates.
-
-        test_create_when_required_fields_are_missing():
-            Verify required field validation during country creation.
-
-        test_create_record_max_length_exceeded():
-            Test field length constraints on country codes.
-
-        test_methods_in_docstring(): Validate all test methods are documented.
+    Methods
+    -------
+    test_select_country
+        Verify country record selection by ID.
+    test_update_country
+        Test country record updates with new values.
+    test_create_duplicate_values_for_unique_fields_forbidden
+        Ensure unique field constraints prevent duplicate country creation.
+    test_update_duplicate_values_for_unique_fields_forbidden
+        Ensure unique field constraints prevent duplicate country updates.
+    test_create_when_required_fields_are_missing
+        Verify required field validation during country creation.
+    test_create_record_max_length_exceeded
+        Test field length constraints on country codes.
+    test_methods_in_docstring
+        Validate all test methods are documented.
     """
 
     def setUp(self):
