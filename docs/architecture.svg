@@ -1,0 +1,54 @@
+<svg viewBox="0 0 600 280" width="100%" height="auto" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+  <!-- Web Layer -->
+  <g transform="translate(20,20)">
+    <rect x="0" y="0" width="100" height="40" rx="8" ry="8" fill="#2196F3" />
+    <text x="50" y="25" font-family="Arial" font-size="14" fill="#fff" text-anchor="middle">Web</text>
+  </g>
+  
+  <!-- Web description -->
+  <text x="140" y="35" font-family="Arial" font-size="11" fill="#555">Handles HTTP routing, validates input, composes responses, and formats output.</text>
+
+  <!-- Arrow from Web to Application -->
+  <line x1="70" y1="60" x2="70" y2="80" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
+
+  <!-- Application Layer -->
+  <g transform="translate(20,90)">
+    <rect x="0" y="0" width="100" height="40" rx="8" ry="8" fill="#4CAF50" />
+    <text x="50" y="25" font-family="Arial" font-size="14" fill="#fff" text-anchor="middle">Application</text>
+  </g>
+  
+  <!-- Application description -->
+  <text x="140" y="105" font-family="Arial" font-size="11" fill="#555">Coordinates interactions between the web layer and the domain layer.</text>
+
+  <!-- Arrow from Application to Domain -->
+  <line x1="70" y1="130" x2="70" y2="150" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
+
+  <!-- Domain Layer -->
+  <g transform="translate(20,160)">
+    <rect x="0" y="0" width="100" height="40" rx="8" ry="8" fill="#FF9800" />
+    <text x="50" y="25" font-family="Arial" font-size="14" fill="#fff" text-anchor="middle">Domain</text>
+  </g>
+  
+  <!-- Domain description -->
+  <text x="140" y="175" font-family="Arial" font-size="11" fill="#555">Core business logic.</text>
+
+  <!-- Arrow from Domain to Data -->
+  <line x1="70" y1="200" x2="70" y2="220" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
+
+  <!-- Data Layer -->
+  <g transform="translate(20,230)">
+    <rect x="0" y="0" width="100" height="40" rx="8" ry="8" fill="#9C27B0" />
+    <text x="50" y="25" font-family="Arial" font-size="14" fill="#fff" text-anchor="middle">Data</text>
+  </g>
+  
+  <!-- Data description -->
+  <text x="140" y="245" font-family="Arial" font-size="11" fill="#555">Storage and data access: database models, queries, transactions.</text>
+
+  <!-- Arrow marker definition -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#555" />
+    </marker>
+  </defs>
+
+</svg>
