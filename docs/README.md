@@ -1,11 +1,11 @@
 # Knowlift
 
 A series of interactive games designed to boost your mood.  
-Works great on both **phones** 📱 and **computers** 💻.
+Works great on both phones 📱 and computers 💻.
 
 ## 🏗️ Architecture
 
-The project follows a layered architecture pattern where each layer only depends on the layers below it.
+The project follows a layered architecture pattern where each layer only depends on the layer below it.
 
 ![Architecture Diagram](./architecture.svg)
 
