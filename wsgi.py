@@ -5,22 +5,22 @@
 """
 WSGI entry point for the Knowlift web application.
 
-Notes:
-======
-    This file is executed by mod_wsgi on startup to get the application object
-    for serving the Knowlift web app.
+Notes
+-----
+This file is executed by mod_wsgi on startup to get the application object
+for serving the Knowlift web app.
 
-Global variables:
-=================
-	application:
-        The Flask application instance. Acts as a central registry for views,
-        URLs, templates, and other resources.
+Attributes
+----------
+application : Flask
+    The Flask application instance. Acts as a central registry for views,
+    URLs, templates, and other resources.
 
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their public APIs
-    (if applicable), everything else is an implementation detail, and shouldn't
-    be relied upon as it may change over time.
+Notes
+-----
+Except for the public objects exported by this module and their public APIs
+(if applicable), everything else is an implementation detail and should not be
+relied upon, as it may change over time.
 """
 
 __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
