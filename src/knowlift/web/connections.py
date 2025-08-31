@@ -60,7 +60,7 @@ def get_db_connection():
         return flask.g.db
 
 
-def close_db_connection(exception):
+def close_db_connection(exc):
     """
     Return the underlying DB API connection to the connection pool.
 
@@ -69,7 +69,7 @@ def close_db_connection(exception):
     request, preventing connection leaks.
 
     Args:
-        exception (Exception | None):
+        exc (Exception | None):
             An exception that occurred during request processing, if any.
             This parameter is required by Flask's teardown handler interface
             but the function handles both success and error cases.
@@ -80,14 +80,20 @@ def close_db_connection(exception):
     db = flask.g.pop('db', None)
 
     if transaction is not None:
-        if exception is None:
-            transaction.commit()
-            logger.debug("Database transaction committed")
-        else:
-            transaction.rollback()
-            logger.error("Database transaction rolled back due to: %s", exception)
+        try:
+            if exc is None:
+                transaction.commit()
+                logger.debug("Database transaction committed")
+            else:
+                transaction.rollback()
+                logger.error("Database transaction rolled back due to: %s", exc)
+        except Exception as e:
+            logger.error("Error during transaction cleanup: %s", e)
 
     if db is not None:
-        db.close()
+        try:
+            db.close()
+        except Exception as e:
+            logger.error("Error closing database connection: %s", e)
     else:
         logger.debug('The database does not exist on the application context.')
