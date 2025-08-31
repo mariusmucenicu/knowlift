@@ -36,7 +36,7 @@ import json
 import flask
 
 # Project specific
-from knowlift.domain import number_distance
+from knowlift.application import interval_count
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +81,7 @@ def play():
     :rtype: str
     """
     level = flask.request.form.get('level')
-    data = number_distance.play(level)
+    data = interval_count.start_game(level)
     if not data:
         flask.abort(500, description=f'Unable to use: {level} as a game level.')
     else:
@@ -104,7 +104,7 @@ def result():
     else:
         data = json.loads(raw_data)
 
-    result_data = number_distance.generate_result(data)
+    result_data = interval_count.evaluate_answer(data)
     if not result_data:
         flask.abort(500, description=f'Unable to generate results from {raw_data}.')
     elif result_data['outcome']:
