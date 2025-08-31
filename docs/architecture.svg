@@ -6,7 +6,7 @@
   </g>
   
   <!-- Web description -->
-  <text x="140" y="35" font-family="Arial" font-size="11" fill="#555">Handles HTTP routing, validates input, composes responses, and formats output.</text>
+  <text x="140" y="45" font-family="Arial" font-size="11" fill="var(--color-fg-default)">Handles HTTP routing, validates input, composes responses, and formats output.</text>
 
   <!-- Arrow from Web to Application -->
   <line x1="70" y1="60" x2="70" y2="80" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
@@ -18,7 +18,7 @@
   </g>
   
   <!-- Application description -->
-  <text x="140" y="105" font-family="Arial" font-size="11" fill="#555">Coordinates interactions between the web layer and the domain layer.</text>
+  <text x="140" y="115" font-family="Arial" font-size="11" fill="var(--color-fg-default)">Coordinates interactions between the web layer and the domain layer.</text>
 
   <!-- Arrow from Application to Domain -->
   <line x1="70" y1="130" x2="70" y2="150" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
@@ -30,7 +30,7 @@
   </g>
   
   <!-- Domain description -->
-  <text x="140" y="175" font-family="Arial" font-size="11" fill="#555">Core business logic.</text>
+  <text x="140" y="185" font-family="Arial" font-size="11" fill="var(--color-fg-default)">Core business logic.</text>
 
   <!-- Arrow from Domain to Data -->
   <line x1="70" y1="200" x2="70" y2="220" stroke="#555" stroke-width="2" marker-end="url(#arrowhead)" />
@@ -42,7 +42,7 @@
   </g>
   
   <!-- Data description -->
-  <text x="140" y="245" font-family="Arial" font-size="11" fill="#555">Storage and data access: database models, queries, transactions.</text>
+  <text x="140" y="255" font-family="Arial" font-size="11" fill="var(--color-fg-default)">Storage and data access: database models, queries, transactions.</text>
 
   <!-- Arrow marker definition -->
   <defs>
