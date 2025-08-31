@@ -4,16 +4,20 @@ Test model related functionality.
 This module encapsulates logic that validates data integrity, relationships
 between entities, and database constraints across models.
 
-Classes:
-========
-    UserModelTests: Test the user entity in various scenarios.
-    CountryModelTests: Test the country entity in various scenarios.
+Classes
+-------
+ModelTestCase
+    Base test case for model tests with common database setup.
+UserModelTests
+    Test the user entity in various scenarios.
+CountryModelTests
+    Test the country entity in various scenarios.
 
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their public
-    APIs (if applicable), everything else is an implementation detail, and
-    shouldn't be relied upon as it may change over time.
+Miscellaneous objects
+---------------------
+Except for the public objects exported by this module and their public
+APIs (if applicable), everything else is an implementation detail, and
+shouldn't be relied upon as it may change over time.
 """
 
 # Standard library
@@ -30,7 +34,18 @@ from knowlift.data import models
 from tests import factories
 
 
-class UserModelTests(unittest.TestCase):
+class ModelTestCase(unittest.TestCase):
+    """Base test case for model tests."""
+    
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        app = web.create_app('test')
+        cls.engine = app.config['DATABASE_ENGINE']
+        models.metadata.create_all(cls.engine)
+
+
+class UserModelTests(ModelTestCase):
     """
     Test user entity functionality including data integrity and relationships.
 
@@ -57,12 +72,6 @@ class UserModelTests(unittest.TestCase):
         test_methods_in_docstring():
             Validate all test methods are documented.
     """
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        app = web.create_app('test')
-        cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
         super().setUp()
@@ -188,7 +197,7 @@ class UserModelTests(unittest.TestCase):
             super().tearDownClass()
 
 
-class CountryModelTests(unittest.TestCase):
+class CountryModelTests(ModelTestCase):
     """
     Test country entity functionality including data integrity and validation.
 
@@ -214,12 +223,6 @@ class CountryModelTests(unittest.TestCase):
 
         test_methods_in_docstring(): Validate all test methods are documented.
     """
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        app = web.create_app('test')
-        cls.engine = app.config['DATABASE_ENGINE']
 
     def setUp(self):
         super().setUp()

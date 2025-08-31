@@ -36,6 +36,9 @@ Miscellaneous objects:
 import logging
 import os
 
+# Third party
+import sqlalchemy
+
 
 class ConsoleFilter:
     """
@@ -90,6 +93,12 @@ class Config:
     SECRET_KEY = (
         '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
     )
+
+    @property
+    def DATABASE_ENGINE(self):
+        """Create and return an SQLAlchemy engine."""
+        database_url = f"sqlite:///{self.DATABASE}"
+        return sqlalchemy.create_engine(database_url)
 
     # Initial configuration for the logging machinery.
     LOGGING_CONFIG = {
