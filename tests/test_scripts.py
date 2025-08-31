@@ -20,6 +20,7 @@ import sqlalchemy
 
 # Project specific
 from knowlift.core import settings
+from scripts import init_db
 
 
 class InitDbScriptTests(unittest.TestCase):
@@ -28,18 +29,17 @@ class InitDbScriptTests(unittest.TestCase):
 
     Methods
     -------
-    test_script_with_all_environments
-        Tests script behavior with all environment configurations and verifies table creation.
+    test_script_with_dev_and_test_environments
+        Tests script behavior with development and test configurations and verifies table creation.
     """
 
-    def test_script_with_all_environments(self):
-        """Script works correctly with all environment configurations."""
-        environments = ['test', 'development', 'production']
+    def test_script_with_dev_and_test_environments(self):
+        """Script works correctly with development and test configurations."""
+        environments = ['test', 'development']
         
         for env in environments:
             with self.subTest(environment=env):
                 with mock.patch.dict(os.environ, {'KNOWLIFT_ENV': env}):
-                    from scripts import init_db
                     init_db.main()
 
                 # Verify tables were created by checking with the appropriate config

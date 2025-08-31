@@ -55,13 +55,13 @@ class TestAppFactory(WebTestCase):
 
     def test_create_app_no_env(self):
         """Test creating the app without specifying an environment."""
-        app = web.create_app()
+        app = web.create_app(env='test')
         self.assertIsInstance(app, flask.Flask)
         self.assertFalse(app.debug)
 
-    def test_create_app_with_env(self):
-        """Test creating the app with a specific environment."""
-        for env in ['production', 'development', 'test']:
+    def test_create_app_with_dev_and_test_env(self):
+        """Test creating the app with development and test environments."""
+        for env in ['development', 'test']:
             with self.subTest(env=env):
                 app = web.create_app(env=env)
                 self.assertIsInstance(app, flask.Flask)

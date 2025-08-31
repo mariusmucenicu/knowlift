@@ -85,9 +85,12 @@ class Config:
     # than handled by Flask.
     TESTING = False
 
+    SETTINGS_PATH = os.path.abspath(__file__)
+    SETTINGS_DIR = os.path.dirname(SETTINGS_PATH)
+
     # Absolute path to the project root on the filesystem. Build paths
     # inside the project like this: os.path.join(BASE_DIR, ...)
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(SETTINGS_DIR)))
 
     # The absolute pathname of the database file to be opened.
     DATABASE = os.path.join(BASE_DIR, 'default.db')
