@@ -52,13 +52,11 @@ def create_app(env=None):
         2. instance/local_settings.py (if present)
         3. Prefixed environment variables (KNOWLIFT_*) — highest precedence
 
-    Args:
-        env (str | None):
-            Environment name ('development', 'production', or 'test').
-            If None, uses KNOWLIFT_ENV or defaults to 'production'.
-
-    Returns:
-        flask.app.Flask: The Flask WSGI application instance.
+    :param env: Environment name ('development', 'production', or 'test').
+                If None, uses KNOWLIFT_ENV or defaults to 'production'.
+    :type env: str or None
+    :return: The Flask WSGI application instance.
+    :rtype: flask.app.Flask
     """
     app = flask.Flask(
         'knowlift',

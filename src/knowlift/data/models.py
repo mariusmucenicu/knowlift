@@ -5,22 +5,23 @@
 """
 Implement the logical structure of the database.
 
+Module Variables
+----------------
+metadata
+    A collection of Table objects and their associated schema constructs.
+user
+    The user entity with its corresponding attributes and relationships.
+country
+    The country entity with its corresponding attributes and relationships.
+
 Notes
-=====
-    It's imperative that the tables (relations/entities) below achieve at least 3NF in order to
-        reduce data redundancy and improve data integrity.
+-----
+It's imperative that the tables (relations/entities) below achieve at least 3NF in order to
+reduce data redundancy and improve data integrity.
 
-Global variables:
-=================
-    metadata: A collection of Table objects and their associated schema constructs.
-    user: The user entity with its corresponding attributes and relationships.
-    country: The country entity with its corresponding attributes and relationships.
-
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their public APIs (if applicable),
-        everything else is an implementation detail, and shouldn't be relied upon as it may change
-        over time.
+Except for the public objects exported by this module and their public APIs (if applicable),
+everything else is an implementation detail, and shouldn't be relied upon as it may change
+over time.
 """
 
 # Standard library

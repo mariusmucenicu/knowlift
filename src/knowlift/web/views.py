@@ -5,27 +5,37 @@
 """
 Handle incoming HTTP requests.
 
-Functions:
-==========
-    index: Get the homepage.
-    internal_server_error: Get the custom internal server error page.
-    about: Get the about page.
-    grade: Get the grade page (this page contains all the difficulty levels).
-    ladder: Get the ladder page.
-    legal: Get the legal page (this page comprises legal information e.g GDPR, terms of use, etc).
-    page_not_found: Get the custom not found page.
-    play: Return a mathematical interval based on a particular difficulty level.
-    result: Return a result based on the user's input.
+Functions
+---------
+index
+    Get the homepage.
+internal_server_error
+    Get the custom internal server error page.
+about
+    Get the about page.
+grade
+    Get the grade page (this page contains all the difficulty levels).
+ladder
+    Get the ladder page.
+legal
+    Get the legal page (this page comprises legal information e.g GDPR, terms of use, etc).
+page_not_found
+    Get the custom not found page.
+play
+    Return a mathematical interval based on a particular difficulty level.
+result
+    Return a result based on the user's input.
 
-Global variables
-================
-    logger: An object that exposes several methods that can be used to log messages at runtime.
+Module Variables
+----------------
+logger
+    An object that exposes several methods that can be used to log messages at runtime.
 
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their public APIs (if applicable),
-        everything else is an implementation detail, and shouldn't be relied upon as it may change
-        over time.
+Notes
+-----
+Except for the public objects exported by this module and their public APIs (if applicable),
+everything else is an implementation detail, and shouldn't be relied upon as it may change
+over time.
 """
 
 # Standard library
