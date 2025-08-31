@@ -86,7 +86,7 @@ class TestDBConnection(WebTestCase):
         """Test that getting a connection outside of an app context raises an error."""
         self.app_context.pop()
         with self.assertRaises(RuntimeError):
-            web.get_connection()
+            web.connections.get_db_connection()
         self.app_context.push()
 
     def test_get_and_close_connection(self):
@@ -94,24 +94,24 @@ class TestDBConnection(WebTestCase):
         with self.app.app_context():
             self.assertIsNone(getattr(flask.g, 'db', None))
 
-            conn = web.get_connection()
+            conn = web.connections.get_db_connection()
             self.assertIsNotNone(conn)
             self.assertIn('db', flask.g)
 
-            same_conn = web.get_connection()
+            same_conn = web.connections.get_db_connection()
             self.assertIs(conn, same_conn)
 
         self.assertIsNone(getattr(flask.g, 'db', None))
 
-    @mock.patch('knowlift.web.flask.current_app.logger')
+    @mock.patch('knowlift.web.connections.flask.current_app.logger')
     def test_close_connection_on_exception(self, logger_mock):
         """Test that the connection is closed and exception is logged on app context teardown."""
 
         with self.app.app_context():
-            conn = web.get_connection()
+            conn = web.connections.get_db_connection()
             self.assertIsNotNone(conn)
 
-            web.close_connection(Exception("Test exception for teardown"))
+            web.connections.close_db_connection(Exception("Test exception for teardown"))
             logger_mock.error.assert_called()
 
 
