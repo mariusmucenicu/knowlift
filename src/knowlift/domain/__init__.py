@@ -3,7 +3,7 @@ Contains the business logic of the application.
 
 Modules:
 ========
-	number_distance: Build mathematical intervals from upper and lower bounds.
+	interval_count_game: Build mathematical intervals from upper and lower bounds.
 
 Miscellaneous objects:
 ======================
