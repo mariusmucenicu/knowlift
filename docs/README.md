@@ -7,7 +7,7 @@ Works great on both phones 📱 and computers 💻.
 
 The project follows a layered architecture pattern where each layer only depends on the layer below it.
 
-The layers in this diagram map directly to Python packages under `src/`. For example, the **Web** layer corresponds to `src/web`, and so on.
+The layers in the diagram below map directly to Python packages under `src/`, e.g. **Web** → `src/web`, etc.
 
 ![Architecture Diagram](./architecture.svg)
 
