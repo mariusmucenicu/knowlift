@@ -5,8 +5,7 @@ Works great on both phones 📱 and computers 💻.
 
 ## 🏗️ Architecture
 
-The project follows a layered architecture pattern where each layer only depends on the layer below it.
-
+The project follows a layered architecture pattern where each layer only depends on the layer below it.  
 The layers in the diagram below map directly to Python packages under `src/`, e.g. **Web** → `src/web`, etc.
 
 ![Architecture Diagram](./architecture.svg)
