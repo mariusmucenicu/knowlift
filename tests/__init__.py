@@ -20,15 +20,3 @@ Except for the public objects exported by this module and their public APIs (if 
 everything else is an implementation detail, and shouldn't be relied upon as it may change
 over time.
 """
-
-# Standard library
-import logging
-import os
-
-# Project specific
-from knowlift.core import settings
-
-try:
-    os.unlink(settings.TestConfig.DATABASE)
-except FileNotFoundError as ex:
-    logging.debug(f'Failed to delete the database. {ex}')

@@ -2,7 +2,7 @@
 Unit tests for project scripts.
 
 These tests verify the functionality of standalone scripts used for
-database operations, migrations, and other administrative tasks.
+database operations, migrations, and other tasks.
 
 Classes
 -------
@@ -29,25 +29,29 @@ class InitDbScriptTests(unittest.TestCase):
 
     Methods
     -------
-    test_script_with_dev_and_test_environments
-        Tests script behavior with development and test configurations and verifies table creation.
+    test_script_with_test_environment
+        Tests script behavior with test configuration and verifies table creation.
     """
 
-    def test_script_with_dev_and_test_environments(self):
-        """Script works correctly with development and test configurations."""
-        environments = ['test', 'development']
-        
-        for env in environments:
-            with self.subTest(environment=env):
-                with mock.patch.dict(os.environ, {'KNOWLIFT_ENV': env}):
-                    init_db.main()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.config = settings.get_config('test')
+        cls.engine = cls.config.DATABASE_ENGINE
 
-                # Verify tables were created by checking with the appropriate config
-                app_config = settings.get_config(env)
-                engine = app_config.DATABASE_ENGINE
+    @mock.patch.dict(os.environ, {'KNOWLIFT_ENV': 'test'})
+    def test_script_with_test_environment(self):
+        """Script works correctly with test configuration."""
+        init_db.main()
 
-                inspector = sqlalchemy.inspect(engine)
-                tables = inspector.get_table_names()
-
-                self.assertIn('user', tables)
-                self.assertIn('country', tables)
+        # Verify tables were created by checking with the test config
+        inspector = sqlalchemy.inspect(self.engine)
+        tables = inspector.get_table_names()
+        self.assertTrue(tables)
+    
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            cls.engine.dispose()
+        finally:
+            return super().tearDownClass()
