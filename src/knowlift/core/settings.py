@@ -34,10 +34,11 @@ Notes
 Functions
 ---------
 get_config
-    Return configuration class based on environment name.
+    Return configuration instance based on environment name.
 """
 
 # Standard library
+import functools
 import logging
 import os
 
@@ -102,7 +103,7 @@ class Config:
         '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
     )
 
-    @property
+    @functools.cached_property
     def DATABASE_ENGINE(self):
         """Create and return an SQLAlchemy engine."""
         database_url = f"sqlite:///{self.DATABASE}"
@@ -294,19 +295,19 @@ class TestConfig(Config):
 
 
 CONFIGS = {
-    'production': ProductionConfig,
-    'development': DevelopmentConfig,
-    'test': TestConfig,
+    'production': ProductionConfig(),
+    'development': DevelopmentConfig(),
+    'test': TestConfig(),
 }
 
 
 def get_config(name):
     """
-    Return configuration class based on environment name.
+    Return a configuration instance based on environment name.
     
     :param name: Environment name ('development', 'production', or 'test').
     :type name: str
-    :return: Configuration class for the specified environment.
-    :rtype: type
+    :return: Configuration instance for the specified environment.
+    :rtype: Config
     """
-    return CONFIGS.get(name.strip().lower(), ProductionConfig)
+    return CONFIGS.get(name.strip().lower(), CONFIGS['production'])

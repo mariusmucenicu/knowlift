@@ -43,7 +43,7 @@ class InitDbScriptTests(unittest.TestCase):
                     init_db.main()
 
                 # Verify tables were created by checking with the appropriate config
-                app_config = settings.get_config(env)()
+                app_config = settings.get_config(env)
                 engine = app_config.DATABASE_ENGINE
 
                 inspector = sqlalchemy.inspect(engine)

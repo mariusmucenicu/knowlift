@@ -20,7 +20,7 @@ def main():
     """Initialize database tables."""
     env = os.getenv('KNOWLIFT_ENV', 'development')
     
-    app_config = settings.get_config(env)()
+    app_config = settings.get_config(env)
 
     engine = app_config.DATABASE_ENGINE
 
