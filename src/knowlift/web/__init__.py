@@ -68,7 +68,7 @@ def create_app(env=None):
     app_environment = env or os.getenv('KNOWLIFT_ENV', 'production')
     app_config = settings.get_config(app_environment)
 
-    app.config.from_object(app_config())
+    app.config.from_object(app_config)
     app.config.from_pyfile('local_settings.py', silent=True)
     app.config.from_prefixed_env(prefix='KNOWLIFT')
 
