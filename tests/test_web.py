@@ -1,28 +1,37 @@
 """
 Test web related functionality (views, templates, overall interaction, etc.)
 
-Functions:
-==========
-    check_membership: Check if all the elements of a given array are found in a target string.
+Functions
+---------
+check_membership
+    Check if all the elements of a given array are found in a target string.
 
-Classes:
-========
-    TestAppFactory: Test the app factory for creating Flask application instances.
-    TestDBConnection: Test the database connection handling.
-    TestIndexPage: Test the requests going under /index
-    TestAboutPage: Test the requests going under /about
-    TestCustomInternalErrorPage: Test the requests that the server failed to fulfil
-    TestCustomNotFoundPage: Test the requests that are not mapped to any URL
-    TestGradePage: Test the requests going under /grade
-    TestLadderPage: Test the requests going under /ladder
-    TestLegalPage: Test the requests going under /legal
-    TestPlayPage: Test the requests going under /play
-    TestResultPage: Test the requests going under /result
+Classes
+-------
+TestDBConnection
+    Test the database connection handling.
+TestIndexPage
+    Test the requests going under /index
+TestAboutPage
+    Test the requests going under /about
+TestCustomInternalErrorPage
+    Test the requests that the server failed to fulfil
+TestCustomNotFoundPage
+    Test the requests that are not mapped to any URL
+TestGradePage
+    Test the requests going under /grade
+TestLadderPage
+    Test the requests going under /ladder
+TestLegalPage
+    Test the requests going under /legal
+TestPlayPage
+    Test the requests going under /play
+TestResultPage
+    Test the requests going under /result
 """
 
 # Standard library
 import json
-import unittest
 from unittest import mock
 
 # Third-party
@@ -30,17 +39,7 @@ import flask
 
 # Project specific
 from knowlift import web
-
-
-class WebTestCase(unittest.TestCase):
-    """Base test case for web-related tests with common setup."""
-    
-    @classmethod
-    def setUpClass(cls):
-        cls.app = web.create_app(env='test')
-    
-    def setUp(self):
-        self.client = self.app.test_client()
+from tests import base
 
 
 def check_membership(text, *strings):
@@ -50,44 +49,13 @@ def check_membership(text, *strings):
     return True
 
 
-class TestAppFactory(WebTestCase):
-    """Test the app factory for creating Flask application instances."""
-
-    def test_create_app_no_env(self):
-        """Test creating the app without specifying an environment."""
-        app = web.create_app(env='test')
-        self.assertIsInstance(app, flask.Flask)
-        self.assertFalse(app.debug)
-
-    def test_create_app_with_dev_and_test_env(self):
-        """Test creating the app with development and test environments."""
-        for env in ['development', 'test']:
-            with self.subTest(env=env):
-                app = web.create_app(env=env)
-                self.assertIsInstance(app, flask.Flask)
-                if env == 'development':
-                    self.assertTrue(app.debug)
-                else:
-                    self.assertFalse(app.debug)
-
-
-class TestDBConnection(WebTestCase):
+class TestDBConnection(base.AppTestCase):
     """Test the database connection handling."""
-
-    def setUp(self):
-        super().setUp()
-        self.app_context = self.app.app_context()
-        self.app_context.push()
-
-    def tearDown(self):
-        self.app_context.pop()
 
     def test_get_connection_outside_context(self):
         """Test that getting a connection outside of an app context raises an error."""
-        self.app_context.pop()
         with self.assertRaises(RuntimeError):
             web.connections.get_db_connection()
-        self.app_context.push()
 
     def test_get_and_close_connection(self):
         """Test getting and closing a database connection within an app context."""
@@ -101,21 +69,23 @@ class TestDBConnection(WebTestCase):
             same_conn = web.connections.get_db_connection()
             self.assertIs(conn, same_conn)
 
-        self.assertIsNone(getattr(flask.g, 'db', None))
+            web.connections.close_db_connection(None)
 
-    @mock.patch('knowlift.web.connections.flask.current_app.logger')
-    def test_close_connection_on_exception(self, logger_mock):
+        # After context ends, flask.g should be clean
+        with self.app.app_context():
+            self.assertIsNone(getattr(flask.g, 'db', None))
+
+    def test_close_connection_on_exception(self):
         """Test that the connection is closed and exception is logged on app context teardown."""
-
         with self.app.app_context():
             conn = web.connections.get_db_connection()
             self.assertIsNotNone(conn)
 
-            web.connections.close_db_connection(Exception("Test exception for teardown"))
-            logger_mock.error.assert_called()
+            with mock.patch('knowlift.web.connections.flask.current_app.logger') as logger_mock:
+                web.connections.close_db_connection(Exception("Test exception for teardown"))
+                logger_mock.error.assert_called()
 
-    @mock.patch('knowlift.web.connections.flask.current_app.logger')
-    def test_transaction_cleanup_error_handling(self, logger_mock):
+    def test_transaction_cleanup_error_handling(self):
         """Test that transaction cleanup errors are handled gracefully."""
         with self.app.app_context():
             conn = web.connections.get_db_connection()
@@ -126,12 +96,11 @@ class TestDBConnection(WebTestCase):
             mock_transaction.commit.side_effect = Exception("Commit failed")
             flask.g.db_transaction = mock_transaction
 
-            web.connections.close_db_connection(None)
+            with mock.patch('knowlift.web.connections.flask.current_app.logger') as logger_mock:
+                web.connections.close_db_connection(None)
+                logger_mock.error.assert_called_with("Error during transaction cleanup: %s", mock.ANY)
 
-            logger_mock.error.assert_called_with("Error during transaction cleanup: %s", mock.ANY)
-
-    @mock.patch('knowlift.web.connections.flask.current_app.logger')
-    def test_connection_close_error_handling(self, logger_mock):
+    def test_connection_close_error_handling(self):
         """Test that connection close errors are handled gracefully."""
         with self.app.app_context():
             conn = web.connections.get_db_connection()
@@ -142,13 +111,12 @@ class TestDBConnection(WebTestCase):
             mock_conn.close.side_effect = Exception("Close failed")
             flask.g.db = mock_conn
 
-            web.connections.close_db_connection(None)
+            with mock.patch('knowlift.web.connections.flask.current_app.logger') as logger_mock:
+                web.connections.close_db_connection(None)
+                logger_mock.error.assert_called_with("Error closing database connection: %s", mock.ANY)
 
-            # Should log the connection close error
-            logger_mock.error.assert_called_with("Error closing database connection: %s", mock.ANY)
 
-
-class TestIndexPage(WebTestCase):
+class TestIndexPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -187,7 +155,7 @@ class TestIndexPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestAboutPage(WebTestCase):
+class TestAboutPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -207,7 +175,7 @@ class TestAboutPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestCustomInternalErrorPage(WebTestCase):
+class TestCustomInternalErrorPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -247,7 +215,7 @@ class TestCustomInternalErrorPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestCustomNotFoundPage(WebTestCase):
+class TestCustomNotFoundPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -272,7 +240,7 @@ class TestCustomNotFoundPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestGradePage(WebTestCase):
+class TestGradePage(base.AppTestCase):
     """
     Methods:
     ========
@@ -300,7 +268,7 @@ class TestGradePage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestLadderPage(WebTestCase):
+class TestLadderPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -320,7 +288,7 @@ class TestLadderPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestLegalPage(WebTestCase):
+class TestLegalPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -361,7 +329,7 @@ class TestLegalPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestPlayPage(WebTestCase):
+class TestPlayPage(base.AppTestCase):
     """
     Methods:
     ========
@@ -422,7 +390,7 @@ class TestPlayPage(WebTestCase):
         self.assertTrue(expected_items_in_body)
 
 
-class TestResultPage(WebTestCase):
+class TestResultPage(base.AppTestCase):
     """
     Methods:
     ========

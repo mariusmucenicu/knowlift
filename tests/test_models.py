@@ -6,8 +6,6 @@ between entities, and database constraints across models.
 
 Classes
 -------
-ModelTestCase
-    Base test case for model tests with common database setup.
 UserModelTests
     Test the user entity in various scenarios.
 CountryModelTests
@@ -20,32 +18,17 @@ APIs (if applicable), everything else is an implementation detail, and
 shouldn't be relied upon as it may change over time.
 """
 
-# Standard library
-import unittest
-
 # Third party
 import sqlalchemy
-
 from sqlalchemy import exc
 
 # Project specific
-from knowlift import web
 from knowlift.data import models
 from tests import factories
+from tests import base
 
 
-class ModelTestCase(unittest.TestCase):
-    """Base test case for model tests."""
-    
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        app = web.create_app('test')
-        cls.engine = app.config['DATABASE_ENGINE']
-        models.metadata.create_all(cls.engine)
-
-
-class UserModelTests(ModelTestCase):
+class UserModelTests(base.ModelTestCase):
     """
     Test user entity functionality including data integrity and relationships.
 
@@ -69,7 +52,6 @@ class UserModelTests(ModelTestCase):
 
     def setUp(self):
         super().setUp()
-        self.connection = self.engine.connect()
         self.user = factories.create_user(self.connection)
 
     def test_select_user(self):
@@ -180,18 +162,10 @@ class UserModelTests(ModelTestCase):
         delete_result = self.connection.execute(delete_query)
 
         self.assertEqual(count_result.count_1, delete_result.rowcount)
-        self.connection.close()
         super().tearDown()
 
-    @classmethod
-    def tearDownClass(cls):
-        try:
-            cls.engine.dispose()
-        finally:
-            super().tearDownClass()
 
-
-class CountryModelTests(ModelTestCase):
+class CountryModelTests(base.ModelTestCase):
     """
     Test country entity functionality including data integrity and validation.
 
@@ -215,7 +189,6 @@ class CountryModelTests(ModelTestCase):
 
     def setUp(self):
         super().setUp()
-        self.connection = self.engine.connect()
         self.country = factories.create_country(self.connection)
 
     def test_select_country(self):
@@ -335,12 +308,4 @@ class CountryModelTests(ModelTestCase):
         delete_result = self.connection.execute(delete_query)
 
         self.assertEqual(count_result.count_1, delete_result.rowcount)
-        self.connection.close()
         super().tearDown()
-
-    @classmethod
-    def tearDownClass(cls):
-        try:
-            cls.engine.dispose()
-        finally:
-            super().tearDownClass()
