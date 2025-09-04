@@ -74,6 +74,7 @@ class TestDBConnection(base.AppTestCase):
         # After context ends, flask.g should be clean
         with self.app.app_context():
             self.assertIsNone(getattr(flask.g, 'db', None))
+            self.assertIsNone(getattr(flask.g, 'db_transaction', None))
 
     def test_close_connection_on_exception(self):
         """Test that the connection is closed and exception is logged on app context teardown."""

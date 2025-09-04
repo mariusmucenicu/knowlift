@@ -37,6 +37,7 @@ class AppTestCase(unittest.TestCase):
         cls.engine = cls.app.config['DATABASE_ENGINE']
 
     def setUp(self):
+        super().setUp()
         self.client = self.app.test_client()
 
     @classmethod
@@ -60,8 +61,10 @@ class ModelTestCase(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.connection = self.engine.connect()
+        self.transaction = self.connection.begin()
 
     def tearDown(self):
+        self.transaction.rollback()
         self.connection.close()
         super().tearDown()
 
