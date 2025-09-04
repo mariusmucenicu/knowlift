@@ -54,4 +54,4 @@ class InitDbScriptTests(unittest.TestCase):
         try:
             cls.engine.dispose()
         finally:
-            return super().tearDownClass()
+            super().tearDownClass()
