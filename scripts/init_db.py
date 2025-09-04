@@ -19,17 +19,18 @@ logger = logging.getLogger(__name__)
 def main():
     """Initialize database tables."""
     env = os.getenv('KNOWLIFT_ENV', 'development')
-    
-    app_config = settings.get_config(env)
 
+    app_config = settings.get_config(env)
     engine = app_config.DATABASE_ENGINE
 
     logger.info("Initializing database for %s environment...", env)
     logger.info("Database URL: sqlite:///%s", app_config.DATABASE)
 
-    models.metadata.create_all(engine)
-    
-    logger.info("Database tables created successfully!")
+    try:
+        models.metadata.create_all(engine)
+        logger.info("Database tables created successfully!")
+    finally:
+        engine.dispose()
 
 
 if __name__ == '__main__':
