@@ -267,28 +267,33 @@ class CountryModelTests(base.ModelTestCase):
             )
 
     def test_create_record_max_length_exceeded(self):
-        alpha2 = {
-            'english_short_name': 'Germany',
-            'alpha2_code': 'ALPHA',
-            'alpha3_code': 'DEU'
-        }
-        alpha3 = {
-            'english_short_name': 'Germany',
-            'alpha2_code': 'DE',
-            'alpha3_code': 'OMEGA'
-        }
-        self.assertRaises(
-            exc.IntegrityError,
-            factories.create_country,
-            self.connection,
-            **alpha2
-        )
-        self.assertRaises(
-            exc.IntegrityError,
-            factories.create_country,
-            self.connection,
-            **alpha3
-        )
+        test_cases = [
+            {
+                'field': 'alpha2_code',
+                'data': {
+                    'english_short_name': 'Germany',
+                    'alpha2_code': 'ALPHA',
+                    'alpha3_code': 'DEU'
+                }
+            },
+            {
+                'field': 'alpha3_code', 
+                'data': {
+                    'english_short_name': 'Germany',
+                    'alpha2_code': 'DE',
+                    'alpha3_code': 'OMEGA'
+                }
+            }
+        ]
+
+        for case in test_cases:
+            with self.subTest(field=case['field']):
+                self.assertRaises(
+                    exc.IntegrityError,
+                    factories.create_country,
+                    self.connection,
+                    **case['data']
+                )
 
     def test_methods_in_docstring(self):
         methods_to_check = [
