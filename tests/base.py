@@ -10,12 +10,6 @@ AppTestCase
     Base test case providing Flask app setup with database engine and test client.
 ModelTestCase
     Pure model test case with database engine and model creation.
-
-Miscellaneous objects
----------------------
-Except for the public objects exported by this module and their public
-APIs (if applicable), everything else is an implementation detail, and
-shouldn't be relied upon as it may change over time.
 """
 
 # Standard library

@@ -13,10 +13,4 @@ test_application
     Test knowlift.application functionality.
 test_web
     Test bin.webapp functionality.
-
-Notes
------
-Except for the public objects exported by this module and their public APIs (if applicable),
-everything else is an implementation detail, and shouldn't be relied upon as it may change
-over time.
 """

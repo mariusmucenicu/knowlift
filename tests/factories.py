@@ -3,33 +3,24 @@ Implement model factories for creating database records with default values.
 
 The factories here aid in supporting the DRY principle throughout tests.
 
-Functions:
-==========
-    create_country(connection, **kwargs) -> sqlalchemy.Row:
-        Create a country record.
+Functions
+---------
+create_country
+    Create a country record.
+create_user
+    Create a user record with an associated country and incremental naming.
 
-    create_user(connection, **kwargs) -> sqlalchemy.Row:
-        Create a user record with an associated country and incremental naming.
+Module Variables
+----------------
+infinite_sequence
+    Counter for generating unique sequential identifiers.
 
-Global Variables:
-=================
-    logger (logging.Logger):
-        Logger instance for debugging purposes.
-    infinite_sequence (itertools.count):
-        Counter for generating unique sequential identifiers.
-
-Notes:
-======
-    - All factory functions require an active database connection.
-    - User creation automatically handles country dependencies.
-    - Duplicate countries are handled gracefully by fetching existing records.
-    - Sequential numbering ensures unique usernames across test runs.
-
-Miscellaneous objects:
-======================
-    Except for the public objects exported by this module and their public
-    APIs (if applicable), everything else is an implementation detail, and
-    shouldn't be relied upon as it may change over time.
+Notes
+-----
+- All factory functions require an active database connection.
+- User creation automatically handles country dependencies.
+- Duplicate countries are handled gracefully by fetching existing records.
+- Sequential numbering ensures unique usernames across test runs.
 """
 
 # Standard library

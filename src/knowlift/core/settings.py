@@ -22,13 +22,13 @@ get_config
 
 Notes
 -----
-* These settings are required to be available when the application starts.
-* Many of these settings are sensitive and must be kept confidential.
-* There is a different configuration for each environment: prod, dev, test.
-* The environments above tell Flask which context the app is running in.
-* To switch between environments (configurations) set the KNOWLIFT_ENV env.
-* If KNOWLIFT_ENV is not set, the default config used will be development.
-* Do not alter settings in the application at runtime.
+- These settings are required to be available when the application starts.
+- Many of these settings are sensitive and must be kept confidential.
+- There is a different configuration for each environment: prod, dev, test.
+- The environments above tell Flask which context the app is running in.
+- To switch between environments (configurations) set the KNOWLIFT_ENV env.
+- If KNOWLIFT_ENV is not set, the default config used will be development.
+- Do not alter settings in the application at runtime.
 """
 
 # Standard library

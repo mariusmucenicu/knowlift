@@ -10,10 +10,4 @@ Modules
 -------
 interval_count
     Interval counting game workflows.
-
-Notes
------
-Except for the public objects exported by this module and their public APIs
-(if applicable), everything else is an implementation detail and should not be
-relied upon, as it may change over time.
 """
