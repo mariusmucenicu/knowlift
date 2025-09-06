@@ -19,6 +19,7 @@ shouldn't be relied upon as it may change over time.
 
 # Standard library
 import unittest
+from unittest import mock
 
 # Project specific
 from knowlift.application import interval_count
@@ -51,11 +52,13 @@ class IntervalCountGameTests(unittest.TestCase):
         self.assertIn('stop_internal', result)
         self.assertIn('game_level', result)
 
-    def test_start_game_invalid_level(self):
+    @mock.patch('knowlift.domain.interval_count_game.logger')
+    def test_start_game_invalid_level(self, mock_logger):
         """Test game initiation with invalid difficulty level."""
         result = interval_count.start_game('invalid')
         
         self.assertIsNone(result)
+        mock_logger.error.assert_called()
 
     def test_evaluate_answer_valid_data(self):
         """Test answer evaluation with valid game data."""
@@ -77,10 +80,12 @@ class IntervalCountGameTests(unittest.TestCase):
         self.assertIn('cpu_internal', result)
         self.assertEqual(result['outcome'], True)
 
-    def test_evaluate_answer_invalid_data(self):
+    @mock.patch('knowlift.domain.interval_count_game.logger')
+    def test_evaluate_answer_invalid_data(self, mock_logger):
         """Test answer evaluation with invalid game data."""
         test_data = {'invalid': 'data'}
         
         result = interval_count.evaluate_answer(test_data)
         
         self.assertIsNone(result)
+        mock_logger.error.assert_called()
