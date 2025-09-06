@@ -29,8 +29,7 @@ Notes
 * The environments above tell Flask which context the app is running in.
 * To switch between environments (configurations) set the KNOWLIFT_ENV env.
 * If KNOWLIFT_ENV is not set, the default config used will be production.
-* Do not alter settings in the application at runtime. For example,
-  don't do things like: flask.current_app.config['DEBUG'] = True.
+* Do not alter settings in the application at runtime.
 """
 
 # Standard library
@@ -48,11 +47,6 @@ class Config:
 
     Override these values in subclasses per-environment.
     """
-
-    # Whether debug mode is enabled. This is overridden by the
-    # FLASK_DEBUG environment variable. DO NOT ENABLE DEBUG MODE WHEN
-    # DEPLOYING IN PRODUCTION!
-    DEBUG = False
 
     # Whether testing mode is enabled. Exceptions are propagated rather
     # than handled by Flask.
@@ -115,7 +109,6 @@ class ProductionConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    DEBUG = False
     TESTING = False
 
     @functools.cached_property
@@ -147,7 +140,6 @@ class DevelopmentConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    DEBUG = True
     TESTING = False
     DATABASE = os.path.join(Config.BASE_DIR, 'development.db')
 
@@ -165,7 +157,6 @@ class TestConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    DEBUG = False
     TESTING = True
     DATABASE = os.path.join(Config.BASE_DIR, 'test.db')
 
