@@ -27,7 +27,7 @@ Notes
 * There is a different configuration for each environment: prod, dev, test.
 * The environments above tell Flask which context the app is running in.
 * To switch between environments (configurations) set the KNOWLIFT_ENV env.
-* If KNOWLIFT_ENV is not set, the default config used will be production.
+* If KNOWLIFT_ENV is not set, the default config used will be development.
 * Do not alter settings in the application at runtime.
 """
 
@@ -176,4 +176,4 @@ def get_config(name):
     :return: Configuration instance for the specified environment.
     :rtype: Config
     """
-    return CONFIGS.get(name.strip().lower(), CONFIGS['production'])
+    return CONFIGS.get(name.strip().lower(), CONFIGS['development'])
