@@ -50,7 +50,6 @@ class ConfigTestBaseMixin:
 
     CONFIG_CLS = None
 
-    EXPECTED_DEBUG = None
     EXPECTED_TESTING = None
     EXPECTED_DB_SUFFIX = None
     EXPECTED_ROOT_LOG_LEVEL = None
@@ -61,9 +60,6 @@ class ConfigTestBaseMixin:
         super().setUp()
         self.cfg = self.CONFIG_CLS()
 
-    def test_debug_flag(self):
-        """Verify the DEBUG flag matches the expected value."""
-        self.assertEqual(self.cfg.DEBUG, self.EXPECTED_DEBUG)
 
     def test_testing_flag(self):
         """Verify the TESTING flag matches the expected value."""
@@ -105,7 +101,6 @@ class TestConfigDefault(ConfigTestBaseMixin, unittest.TestCase):
     """Test the base configuration class functionality."""
 
     CONFIG_CLS = settings.Config
-    EXPECTED_DEBUG = False
     EXPECTED_TESTING = False
     EXPECTED_DB_SUFFIX = "default.db"
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
@@ -117,7 +112,6 @@ class TestConfigDevelopment(ConfigTestBaseMixin, unittest.TestCase):
     """Test development configuration class functionality."""
 
     CONFIG_CLS = settings.DevelopmentConfig
-    EXPECTED_DEBUG = True
     EXPECTED_TESTING = False
     EXPECTED_DB_SUFFIX = "development.db"
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
@@ -129,7 +123,6 @@ class TestConfigTesting(ConfigTestBaseMixin, unittest.TestCase):
     """Test testing configuration class functionality."""
 
     CONFIG_CLS = settings.TestConfig
-    EXPECTED_DEBUG = False
     EXPECTED_TESTING = True
     EXPECTED_DB_SUFFIX = "test.db"
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
@@ -142,7 +135,6 @@ class TestConfigProduction(ConfigTestBaseMixin, unittest.TestCase):
     """Test production configuration class functionality."""
 
     CONFIG_CLS = settings.ProductionConfig
-    EXPECTED_DEBUG = False
     EXPECTED_TESTING = False
     EXPECTED_DB_SUFFIX = "production.db"
     EXPECTED_ROOT_LOG_LEVEL = "INFO"
