@@ -51,7 +51,6 @@ def create_app(env=None):
         3. Prefixed environment variables (KNOWLIFT_*) — highest precedence
 
     :param env: Environment name ('development', 'production', or 'test').
-                If None, uses KNOWLIFT_ENV or defaults to 'production'.
     :type env: str or None
     :return: The Flask WSGI application instance.
     :rtype: flask.app.Flask
@@ -63,7 +62,7 @@ def create_app(env=None):
         static_folder=os.path.join(os.path.dirname(__file__), 'static')
     )
 
-    app_environment = env or os.getenv('KNOWLIFT_ENV', 'production')
+    app_environment = env or os.getenv('KNOWLIFT_ENV')
     app_config = settings.get_config(app_environment)
 
     app.config.from_object(app_config)

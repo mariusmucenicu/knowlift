@@ -185,6 +185,6 @@ class GetConfigFunctionTests(unittest.TestCase):
         self.assertIsInstance(config, settings.DevelopmentConfig)
 
     def test_get_config_default_fallback(self):
-        """Verify get_config returns ProductionConfig for unknown environments."""
+        """Verify get_config returns DevelopmentConfig for unknown environments."""
         config = settings.get_config('unknown')
-        self.assertIsInstance(config, settings.ProductionConfig)
+        self.assertIsInstance(config, settings.DevelopmentConfig)
