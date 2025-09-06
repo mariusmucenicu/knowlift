@@ -15,10 +15,11 @@ ProductionConfig
     Store the production configuration settings.
 TestConfig
     Store the test configuration settings.
-ConsoleFilter
-    Filter out LogRecords whose levels are > logging.WARNING.
-FileFilter
-    Filter out LogRecords whose levels are < logging.ERROR.
+
+Functions
+---------
+get_config
+    Return configuration instance based on environment name.
 
 Notes
 -----
@@ -30,44 +31,15 @@ Notes
 * If KNOWLIFT_ENV is not set, the default config used will be production.
 * Do not alter settings in the application at runtime. For example,
   don't do things like: flask.current_app.config['DEBUG'] = True.
-
-Functions
----------
-get_config
-    Return configuration instance based on environment name.
 """
 
 # Standard library
+import copy
 import functools
-import logging
 import os
 
 # Third party
 import sqlalchemy
-
-
-class ConsoleFilter:
-    """
-    Allow only LogRecords whose severity levels are DEBUG, INFO or  WARNING.
-    """
-
-    def __call__(self, log):
-        if log.levelno <= logging.WARNING:
-            return 1
-        else:
-            return 0
-
-
-class FileFilter:
-    """
-    Allow only LogRecords whose severity levels are ERROR or  CRITICAL.
-    """
-
-    def __call__(self, log):
-        if log.levelno > logging.WARNING:
-            return 1
-        else:
-            return 0
 
 
 class Config:
@@ -103,12 +75,6 @@ class Config:
         '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
     )
 
-    @functools.cached_property
-    def DATABASE_ENGINE(self):
-        """Create and return an SQLAlchemy engine."""
-        database_url = f"sqlite:///{self.DATABASE}"
-        return sqlalchemy.create_engine(database_url)
-
     # Initial configuration for the logging machinery.
     LOGGING_CONFIG = {
         'version': 1,
@@ -125,23 +91,21 @@ class Config:
                 'class': 'logging.StreamHandler',
                 'formatter': 'default',
             },
-        },
-        'loggers': {
-            'knowlift': {
-                'level': 'DEBUG',
-            },
-            'sqlalchemy': {
-                'level': 'DEBUG',
-            },
-            'werkzeug': {
-                'level': 'DEBUG',
+            'null': {
+                'class': 'logging.NullHandler',
             },
         },
         'root': {
             'level': 'DEBUG',
-            'handlers': ['default'],
+            'handlers': ['null'],
         },
     }
+
+    @functools.cached_property
+    def DATABASE_ENGINE(self):
+        """Create and return an SQLAlchemy engine."""
+        database_url = f"sqlite:///{self.DATABASE}"
+        return sqlalchemy.create_engine(database_url)
 
 
 class ProductionConfig(Config):
@@ -153,57 +117,27 @@ class ProductionConfig(Config):
 
     DEBUG = False
     TESTING = False
-    DATABASE = os.environ.get('KNOWLIFT_DATABASE')
-    SECRET_KEY = os.environ.get('KNOWLIFT_SECRET_KEY')
-    LOGGING_CONFIG = {
-        'version': 1,
-        'formatters': {
-            'default': {
-                'format': (
-                    "[%(asctime)s] %(levelname)s in %(module)s, "
-                    "line %(lineno)d: %(message)s"
-                )
-            },
-        },
-        'filters': {
-            'file_filter': {
-                '()': FileFilter,
-            },
-            'console_filter': {
-                '()': ConsoleFilter,
-            },
-        },
-        'handlers': {
-            'default': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'default',
-                'filters': ['console_filter'],
-            },
-            'file': {
-                'class': 'logging.handlers.RotatingFileHandler',
-                'formatter': 'default',
-                'filename': 'errors.log',
-                'filters': ['file_filter'],
-                'maxBytes': 500 * 1024 * 1024,
-                'backupCount': 1,
-            },
-        },
-        'loggers': {
-            'knowlift': {
-                'level': 'WARNING',
-            },
-            'sqlalchemy': {
-                'level': 'WARNING',
-            },
-            'werkzeug': {
-                'level': 'WARNING',
-            },
-        },
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['default', 'file'],
-        },
-    }
+
+    @functools.cached_property
+    def DATABASE(self):
+        db = os.environ.get("KNOWLIFT_DATABASE")
+        if not db:
+            raise RuntimeError("KNOWLIFT_DATABASE is required in production.")
+        return db
+
+    @functools.cached_property
+    def SECRET_KEY(self):
+        key = os.environ.get("KNOWLIFT_SECRET_KEY")
+        if not key:
+            raise RuntimeError("KNOWLIFT_SECRET_KEY is required in production.")
+        return key
+
+    @functools.cached_property
+    def LOGGING_CONFIG(self):
+        base_config = copy.deepcopy(super().LOGGING_CONFIG)
+        base_config['root']['level'] = 'INFO'
+        base_config['root']['handlers'] = ['default']
+        return base_config
 
 
 class DevelopmentConfig(Config):
@@ -216,38 +150,12 @@ class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = False
     DATABASE = os.path.join(Config.BASE_DIR, 'development.db')
-    LOGGING_CONFIG = {
-        'version': 1,
-        'formatters': {
-            'default': {
-                'format': (
-                    "[%(asctime)s] %(levelname)s in %(module)s, "
-                    "line %(lineno)d: %(message)s"
-                )
-            },
-        },
-        'handlers': {
-            'default': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'default',
-            },
-        },
-        'loggers': {
-            'knowlift': {
-                'level': 'WARNING',
-            },
-            'sqlalchemy': {
-                'level': 'WARNING',
-            },
-            'werkzeug': {
-                'level': 'DEBUG',
-            },
-        },
-        'root': {
-            'level': 'DEBUG',
-            'handlers': ['default'],
-        },
-    }
+
+    @functools.cached_property
+    def LOGGING_CONFIG(self):
+        base_config = copy.deepcopy(super().LOGGING_CONFIG)
+        base_config['root']['handlers'] = ['default']
+        return base_config
 
 
 class TestConfig(Config):
@@ -260,38 +168,6 @@ class TestConfig(Config):
     DEBUG = False
     TESTING = True
     DATABASE = os.path.join(Config.BASE_DIR, 'test.db')
-    LOGGING_CONFIG = {
-        'version': 1,
-        'formatters': {
-            'default': {
-                'format': (
-                    "[%(asctime)s] %(levelname)s in %(module)s, "
-                    "line %(lineno)d: %(message)s"
-                )
-            },
-        },
-        'handlers': {
-            'default': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'default',
-            },
-        },
-        'loggers': {
-            'knowlift': {
-                'level': 'WARNING',
-            },
-            'sqlalchemy': {
-                'level': 'WARNING',
-            },
-            'werkzeug': {
-                'level': 'WARNING',
-            },
-        },
-        'root': {
-            'level': 'WARNING',
-            'handlers': ['default'],
-        },
-    }
 
 
 CONFIGS = {
