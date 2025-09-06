@@ -28,4 +28,5 @@ __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
 # Project specific
 from knowlift import web
 
+
 application = web.create_app()

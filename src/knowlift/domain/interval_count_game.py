@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 """
 Implement the interface for a simple mathematical game based on intervals.
 
@@ -41,6 +40,7 @@ __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
 # Standard library
 import logging
 import random
+
 
 logger = logging.getLogger(__name__)
 

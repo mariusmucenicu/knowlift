@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 """
 Handle incoming HTTP requests.
 
@@ -47,6 +46,7 @@ import flask
 
 # Project specific
 from knowlift.application import interval_count
+
 
 logger = logging.getLogger(__name__)
 

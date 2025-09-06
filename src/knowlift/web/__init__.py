@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 (C) Marius Mucenicu
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
-
 """
 The web package validates input data, composes responses, formats output data.
 
@@ -28,7 +27,6 @@ Except for the public objects exported by this module and their
 public APIs (if applicable), everything else is an implementation
 detail and shouldn't be relied upon, as it may change over time.
 """
-
 
 # Standard Library
 import os
