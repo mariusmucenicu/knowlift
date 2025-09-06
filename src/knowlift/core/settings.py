@@ -161,12 +161,13 @@ class TestConfig(Config):
 
 
 CONFIGS = {
-    'production': ProductionConfig(),
-    'development': DevelopmentConfig(),
-    'test': TestConfig(),
+    'production': ProductionConfig,
+    'development': DevelopmentConfig,
+    'test': TestConfig,
 }
 
 
+@functools.cache
 def get_config(name):
     """
     Return a configuration instance based on environment name.
@@ -176,4 +177,5 @@ def get_config(name):
     :return: Configuration instance for the specified environment.
     :rtype: Config
     """
-    return CONFIGS.get(name.strip().lower(), CONFIGS['development'])
+    config_class = CONFIGS.get(name.strip().lower(), DevelopmentConfig)
+    return config_class()
