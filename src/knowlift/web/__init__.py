@@ -62,7 +62,7 @@ def create_app(env=None):
         static_folder=os.path.join(os.path.dirname(__file__), 'static')
     )
 
-    app_environment = env or os.getenv('KNOWLIFT_ENV')
+    app_environment = env or os.getenv('KNOWLIFT_ENV', 'development')
     app_config = settings.get_config(app_environment)
 
     app.config.from_object(app_config)
