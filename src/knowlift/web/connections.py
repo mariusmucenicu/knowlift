@@ -77,7 +77,6 @@ def close_db_connection(exc):
         try:
             if exc is None:
                 transaction.commit()
-                logger.debug("Database transaction committed")
             else:
                 transaction.rollback()
                 logger.error("Database transaction rolled back due to: %s", exc)
