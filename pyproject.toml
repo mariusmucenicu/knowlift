@@ -4,10 +4,15 @@ version = "2.0.0"
 description = "Interactive games designed to enhance cognitive skills"
 readme = "docs/README.md"
 requires-python = ">=3.11,<3.14"
+
 dependencies = [
-    "coverage==7.10.3",
     "flask==3.1.1",
     "sqlalchemy==2.0.42",
+]
+
+[dependency-groups]
+dev = [
+    "coverage==7.10.3",
     "ruff==0.12.9",
 ]
 
