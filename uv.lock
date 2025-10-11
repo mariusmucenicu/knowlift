@@ -163,18 +163,26 @@ name = "knowlift"
 version = "2.0.0"
 source = { editable = "." }
 dependencies = [
-    { name = "coverage" },
     { name = "flask" },
-    { name = "ruff" },
     { name = "sqlalchemy" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "coverage" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "coverage", specifier = "==7.10.3" },
     { name = "flask", specifier = "==3.1.1" },
-    { name = "ruff", specifier = "==0.12.9" },
     { name = "sqlalchemy", specifier = "==2.0.42" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "coverage", specifier = "==7.10.3" },
+    { name = "ruff", specifier = "==0.12.9" },
 ]
 
 [[package]]
