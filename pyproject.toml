@@ -6,7 +6,7 @@ readme = "docs/README.md"
 requires-python = ">=3.11,<3.14"
 
 dependencies = [
-    "flask==3.1.1",
+    "flask==3.1.2",
     "sqlalchemy==2.0.44",
 ]
 
