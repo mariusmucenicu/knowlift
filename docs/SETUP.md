@@ -1,30 +1,28 @@
 # Setup
 
-### 🔧 Step 1: Prerequisites
-+ Ensure you have any Python version in the range **[3.11, 3.13]** installed.
-  + If you don't, download one from [here][python-downloads].
-+ Ensure you have the **uv package manager** installed.  
-  + If you don’t, install it by following the steps [here][uv-install].
-+ Clone or download this repository.
+## 📁 Step 1: Get the source code
++ Get the repository via HTTPS or SSH.
 + Change directory into the project root.
 
-### 📦 Step 2: Install dependencies
-```
+## 🔧 Step 2: Install uv
++ Install the **uv package manager** by following the steps [here][uv-install].
+
+## 📦 Step 3: Install dependencies
+```zsh
 uv sync --locked
 ```
 
-### ✅ Step 3: Run the test suite
-```
+## ✅ Step 4: Run the test suite
+```zsh
 uv run python -m unittest discover
 ```
 
-### 🚀 Step 4: Run the application
-```
+## 🚀 Step 5: Run the application
+```zsh
 uv run flask run
 ```
 
-Open your favourite browser at http://127.0.0.1:5000/ and give it a try 🎉
+Open a new tab at [http://127.0.0.1:5000/](flask-app) and give it a try 🎉.
 
-
-[python-downloads]: https://www.python.org/downloads/
 [uv-install]: https://docs.astral.sh/uv/getting-started/installation/
+[flask-app]: http://127.0.0.1:5000/
