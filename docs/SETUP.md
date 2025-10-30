@@ -1,11 +1,10 @@
 # Setup
 
 ## 📁 Step 1: Get the source code
-+ Get the repository via HTTPS or SSH.
-+ Change directory into the project root.
+Get the repository via HTTPS or SSH and change directory into the project root.
 
 ## 🔧 Step 2: Install uv
-+ Install the **uv package manager** by following the steps [here][uv-install].
+Install the **uv package manager** by following the steps [here][uv-install].
 
 ## 📦 Step 3: Install dependencies
 ```zsh
