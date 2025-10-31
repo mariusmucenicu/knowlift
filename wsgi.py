@@ -23,7 +23,7 @@ Except for the public objects exported by this module and their public APIs
 relied upon, as it may change over time.
 """
 
-__author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
+__author__ = "Marius Mucenicu <marius_mucenicu@yahoo.com>"
 
 # Project specific
 from knowlift import web

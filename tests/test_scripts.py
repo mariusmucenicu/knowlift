@@ -1,9 +1,6 @@
 """
 Unit tests for project scripts.
 
-These tests verify the functionality of standalone scripts used for
-database operations, migrations, and other tasks.
-
 Classes
 -------
 InitDbScriptTests
@@ -30,16 +27,16 @@ class InitDbScriptTests(unittest.TestCase):
     Methods
     -------
     test_script_with_test_environment
-        Tests script behavior with test configuration and verifies table creation.
+        Tests script behavior with test config and verifies table creation.
     """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.config = settings.get_config('test')
+        cls.config = settings.get_config("test")
         cls.engine = cls.config.DATABASE_ENGINE
 
-    @mock.patch.dict(os.environ, {'KNOWLIFT_ENV': 'test'})
+    @mock.patch.dict(os.environ, {"KNOWLIFT_ENV": "test"})
     def test_script_with_test_environment(self):
         """Script works correctly with test configuration."""
         init_db.main()
@@ -48,7 +45,7 @@ class InitDbScriptTests(unittest.TestCase):
         inspector = sqlalchemy.inspect(self.engine)
         tables = inspector.get_table_names()
         self.assertTrue(tables)
-    
+
     @classmethod
     def tearDownClass(cls):
         try:

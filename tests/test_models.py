@@ -57,22 +57,22 @@ class UserModelTests(base.ModelTestCase):
 
     def test_update_user(self):
         data = {
-            'username': 'TreeOfLife',
-            'email': 'tol@knolift.com',
-            'password': 'Yggdrasil'
+            "username": "TreeOfLife",
+            "email": "tol@knolift.com",
+            "password": "Yggdrasil",
         }
         where_clause = models.user.c.id == self.user.id
         update_query = models.user.update().where(where_clause).values(data)
         update_result = self.connection.execute(update_query)
 
-        where_clause = models.user.c.username == data['username']
+        where_clause = models.user.c.username == data["username"]
         select_query = sqlalchemy.select(models.user).where(where_clause)
         select_result = self.connection.execute(select_query)
         self.assertEqual(update_result.rowcount, 1)
         self.assertIsNotNone(select_result.fetchone())
 
     def test_create_duplicate_values_for_unique_fields_forbidden(self):
-        test_fields = ('username', 'email')
+        test_fields = ("username", "email")
         for test_field in test_fields:
             payload = {test_field: getattr(self.user, test_field)}
 
@@ -80,25 +80,25 @@ class UserModelTests(base.ModelTestCase):
                 exc.IntegrityError,
                 factories.create_user,
                 self.connection,
-                **payload
+                **payload,
             )
 
     def test_update_duplicate_values_for_unique_fields_forbidden(self):
-        test_fields = ('username', 'email')
+        test_fields = ("username", "email")
         user = factories.create_user(self.connection)
         for test_field in test_fields:
             data = {test_field: getattr(self.user, test_field)}
             where_clause = models.user.c.id == user.id
-            update_query = models.user.update().where(where_clause).values(data)
+            update_query = (
+                models.user.update().where(where_clause).values(data)
+            )
 
             self.assertRaises(
-                exc.IntegrityError,
-                self.connection.execute,
-                update_query
+                exc.IntegrityError, self.connection.execute, update_query
             )
 
     def test_create_when_required_fields_are_missing(self):
-        required_fields = ('username', 'email', 'password', 'country_id')
+        required_fields = ("username", "email", "password", "country_id")
         for required_field in required_fields:
             payload = {required_field: None}
 
@@ -106,16 +106,16 @@ class UserModelTests(base.ModelTestCase):
                 exc.IntegrityError,
                 factories.create_user,
                 self.connection,
-                **payload
+                **payload,
             )
 
     def test_create_user_in_different_country(self):
         payload = {
-            'english_short_name': 'Australia',
-            'alpha2_code': 'AU',
-            'alpha3_code': 'AUS'
+            "english_short_name": "Australia",
+            "alpha2_code": "AU",
+            "alpha3_code": "AUS",
         }
-        country_name = payload['english_short_name']
+        country_name = payload["english_short_name"]
         where_clause = models.country.c.english_short_name == country_name
         select_query = sqlalchemy.select(models.country).where(where_clause)
 
@@ -123,14 +123,17 @@ class UserModelTests(base.ModelTestCase):
 
         user = factories.create_user(self.connection, **payload)
 
-        select_query = sqlalchemy.select(
-            models.user.c.username,
-            models.country.c["english_short_name", "alpha2_code", "alpha3_code"]
-        ).where(
-            models.user.c.username == user.username
-        ).join(
-            models.country,
-            models.user.c.country_id == models.country.c.id
+        select_query = (
+            sqlalchemy.select(
+                models.user.c.username,
+                models.country.c[
+                    "english_short_name", "alpha2_code", "alpha3_code"
+                ],
+            )
+            .where(models.user.c.username == user.username)
+            .join(
+                models.country, models.user.c.country_id == models.country.c.id
+            )
         )
         result = self.connection.execute(select_query).fetchone()
 
@@ -140,11 +143,12 @@ class UserModelTests(base.ModelTestCase):
 
     def test_methods_in_docstring(self):
         methods_to_check = [
-            method_name for method_name in dir(self)
-            if method_name.startswith('test')
+            method_name
+            for method_name in dir(self)
+            if method_name.startswith("test")
         ]
         for method_to_check in methods_to_check:
-            msg = f'{method_to_check} not found in docstring.'
+            msg = f"{method_to_check} not found in docstring."
 
             self.assertIn(method_to_check, self.__doc__, msg)
 
@@ -194,9 +198,9 @@ class CountryModelTests(base.ModelTestCase):
 
     def test_create_duplicate_values_for_unique_fields_forbidden(self):
         test_fields = {
-            'english_short_name': 'United States of America',
-            'alpha2_code': 'US',
-            'alpha3_code': 'USA',
+            "english_short_name": "United States of America",
+            "alpha2_code": "US",
+            "alpha3_code": "USA",
         }
         # When we're popping a value, we're using the default value from the
         # factory for that value
@@ -208,21 +212,21 @@ class CountryModelTests(base.ModelTestCase):
                 exc.IntegrityError,
                 factories.create_country,
                 self.connection,
-                **test_fields_copy
+                **test_fields_copy,
             )
 
     def test_update_country(self):
         data = {
-            'english_short_name': 'United States of America',
-            'alpha2_code': 'US',
-            'alpha3_code': 'USA',
+            "english_short_name": "United States of America",
+            "alpha2_code": "US",
+            "alpha3_code": "USA",
         }
 
         where_clause = models.country.c.id == self.country.id
         update_query = models.country.update().where(where_clause).values(data)
         update_result = self.connection.execute(update_query)
 
-        country_name = data['english_short_name']
+        country_name = data["english_short_name"]
         name_clause = models.country.c.english_short_name == country_name
         select_query = sqlalchemy.select(models.country).where(name_clause)
         select_result = self.connection.execute(select_query).fetchone()
@@ -232,24 +236,24 @@ class CountryModelTests(base.ModelTestCase):
 
     def test_update_duplicate_values_for_unique_fields_forbidden(self):
         new_values = {
-            'english_short_name': 'United States of America',
-            'alpha2_code': 'US',
-            'alpha3_code': 'USA',
+            "english_short_name": "United States of America",
+            "alpha2_code": "US",
+            "alpha3_code": "USA",
         }
         country = factories.create_country(self.connection, **new_values)
         for field in models.country.c.keys():
             d = {field: getattr(self.country, field)}
             where_clause = models.country.c.id == country.id
-            update_query = models.country.update().where(where_clause).values(d)
+            update_query = (
+                models.country.update().where(where_clause).values(d)
+            )
 
             self.assertRaises(
-                exc.IntegrityError,
-                self.connection.execute,
-                update_query
+                exc.IntegrityError, self.connection.execute, update_query
             )
 
     def test_create_when_required_fields_are_missing(self):
-        required_fields = ('english_short_name', 'alpha2_code', 'alpha3_code')
+        required_fields = ("english_short_name", "alpha2_code", "alpha3_code")
         for required_field in required_fields:
             payload = {required_field: None}
 
@@ -257,45 +261,46 @@ class CountryModelTests(base.ModelTestCase):
                 exc.IntegrityError,
                 factories.create_country,
                 self.connection,
-                **payload
+                **payload,
             )
 
     def test_create_record_max_length_exceeded(self):
         test_cases = [
             {
-                'field': 'alpha2_code',
-                'data': {
-                    'english_short_name': 'Germany',
-                    'alpha2_code': 'ALPHA',
-                    'alpha3_code': 'DEU'
-                }
+                "field": "alpha2_code",
+                "data": {
+                    "english_short_name": "Germany",
+                    "alpha2_code": "ALPHA",
+                    "alpha3_code": "DEU",
+                },
             },
             {
-                'field': 'alpha3_code', 
-                'data': {
-                    'english_short_name': 'Germany',
-                    'alpha2_code': 'DE',
-                    'alpha3_code': 'OMEGA'
-                }
-            }
+                "field": "alpha3_code",
+                "data": {
+                    "english_short_name": "Germany",
+                    "alpha2_code": "DE",
+                    "alpha3_code": "OMEGA",
+                },
+            },
         ]
 
         for case in test_cases:
-            with self.subTest(field=case['field']):
+            with self.subTest(field=case["field"]):
                 self.assertRaises(
                     exc.IntegrityError,
                     factories.create_country,
                     self.connection,
-                    **case['data']
+                    **case["data"],
                 )
 
     def test_methods_in_docstring(self):
         methods_to_check = [
-            method_name for method_name in dir(self)
-            if method_name.startswith('test')
+            method_name
+            for method_name in dir(self)
+            if method_name.startswith("test")
         ]
         for method_to_check in methods_to_check:
-            msg = f'{method_to_check} not found in docstring.'
+            msg = f"{method_to_check} not found in docstring."
 
             self.assertIn(method_to_check, self.__doc__, msg)
 

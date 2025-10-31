@@ -36,18 +36,18 @@ class TestIntervalOperations(unittest.TestCase):
 
     def setUp(self):
         self.metadata = (
-            'cpu_internal',
-            'cpu_representation',
-            'answer_representation',
-            'outcome',
-            'left_glyph',
-            'right_glyph',
-            'answer',
-            'game_level',
-            'start_representation',
-            'stop_representation',
-            'start_internal',
-            'stop_internal',
+            "cpu_internal",
+            "cpu_representation",
+            "answer_representation",
+            "outcome",
+            "left_glyph",
+            "right_glyph",
+            "answer",
+            "game_level",
+            "start_representation",
+            "stop_representation",
+            "start_internal",
+            "stop_internal",
         )
 
     def test_calculate_statistics(self):
@@ -61,41 +61,64 @@ class TestIntervalOperations(unittest.TestCase):
 
         for (incorrect, total), expected in test_cases:
             with self.subTest(incorrect=incorrect, total=total):
-                self.assertEqual(interval_count_game.calculate_statistics(incorrect, total), expected)
+                self.assertEqual(
+                    interval_count_game.calculate_statistics(incorrect, total),
+                    expected,
+                )
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_change_game_level(self, mock_logger):
-        increase_level_answers = [6, 4, 0]  # correct_answers, incorrect_answers, current_game_level
+        increase_level_answers = [
+            6,
+            4,
+            0,
+        ]  # correct_answers, incorrect_answers, current_game_level
         decrease_level_answers = [4, 6, 11]
 
         for evaluation in range(24):
             if evaluation < 11:
-                result_increased = interval_count_game.change_game_level(*increase_level_answers)
-                self.assertEqual(result_increased, increase_level_answers[2] + 1)
+                result_increased = interval_count_game.change_game_level(
+                    *increase_level_answers
+                )
+                self.assertEqual(
+                    result_increased, increase_level_answers[2] + 1
+                )
                 increase_level_answers[2] = result_increased
                 mock_logger.info.assert_not_called()
             elif evaluation == 11:
-                result_increased = interval_count_game.change_game_level(*increase_level_answers)
-                self.assertEqual(result_increased, increase_level_answers[2])  # don't go above 10
-                mock_logger.info.assert_called_with('Maximum level reached')
+                result_increased = interval_count_game.change_game_level(
+                    *increase_level_answers
+                )
+                self.assertEqual(
+                    result_increased, increase_level_answers[2]
+                )  # don't go above 10
+                mock_logger.info.assert_called_with("Maximum level reached")
                 mock_logger.reset_mock()
             elif evaluation < 23:
-                result_descreased = interval_count_game.change_game_level(*decrease_level_answers)
-                self.assertEqual(result_descreased, decrease_level_answers[2] - 1)
+                result_descreased = interval_count_game.change_game_level(
+                    *decrease_level_answers
+                )
+                self.assertEqual(
+                    result_descreased, decrease_level_answers[2] - 1
+                )
                 decrease_level_answers[2] = result_descreased
                 mock_logger.info.assert_not_called()
             else:
-                result_descreased = interval_count_game.change_game_level(*decrease_level_answers)
-                self.assertEqual(result_descreased, decrease_level_answers[2])  # don't go below 0
-                mock_logger.info.assert_called_with('Minimum level reached')
+                result_descreased = interval_count_game.change_game_level(
+                    *decrease_level_answers
+                )
+                self.assertEqual(
+                    result_descreased, decrease_level_answers[2]
+                )  # don't go below 0
+                mock_logger.info.assert_called_with("Minimum level reached")
                 mock_logger.reset_mock()
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_fetch_game_level(self, mock_logger):
-        valid_inputs = [('0', 0), ('7', 7)]
+        valid_inputs = [("0", 0), ("7", 7)]
 
         # Test invalid inputs that should trigger ValueError logging
-        value_error_inputs = ['bogus', '3.14']
+        value_error_inputs = ["bogus", "3.14"]
         for invalid_input in value_error_inputs:
             with self.subTest(input=invalid_input):
                 result = interval_count_game.fetch_game_level(invalid_input)
@@ -104,48 +127,81 @@ class TestIntervalOperations(unittest.TestCase):
                 mock_logger.reset_mock()
 
         # Test out-of-range inputs that should trigger index error logging
-        range_error_inputs = ['15', '12', '-1']
+        range_error_inputs = ["15", "12", "-1"]
         for invalid_input in range_error_inputs:
             with self.subTest(input=invalid_input):
                 result = interval_count_game.fetch_game_level(invalid_input)
                 self.assertIsNone(result)
-                mock_logger.error.assert_called_with('Unable to fetch the game level with index: %s', int(invalid_input))
+                mock_logger.error.assert_called_with(
+                    "Unable to fetch the game level with index: %s",
+                    int(invalid_input),
+                )
                 mock_logger.reset_mock()
 
         for input_str, expected_index in valid_inputs:
             with self.subTest(input=input_str):
                 result = interval_count_game.fetch_game_level(input_str)
-                self.assertEqual(result, interval_count_game.GAME_LEVELS[expected_index])
+                self.assertEqual(
+                    result, interval_count_game.GAME_LEVELS[expected_index]
+                )
                 mock_logger.error.assert_not_called()
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_generate_result_correct_values(self, mock_logger):
         correct_intervals = [
             {
-                'left_glyph': '(', 'right_glyph': ')', 'start_internal': 7, 'stop_internal': 41,
-                'start_representation': '7', 'stop_representation': '41', 'answer': 33, 'game_level': 0,
-                'expected_cpu': 33, 'expected_repr': '33'
+                "left_glyph": "(",
+                "right_glyph": ")",
+                "start_internal": 7,
+                "stop_internal": 41,
+                "start_representation": "7",
+                "stop_representation": "41",
+                "answer": 33,
+                "game_level": 0,
+                "expected_cpu": 33,
+                "expected_repr": "33",
             },
             {
-                'left_glyph': '[', 'right_glyph': ')', 'start_internal': 7, 'stop_internal': 41,
-                'start_representation': '7', 'stop_representation': '41', 'answer': 34, 'game_level': 0,
-                'expected_cpu': 34, 'expected_repr': '34'
+                "left_glyph": "[",
+                "right_glyph": ")",
+                "start_internal": 7,
+                "stop_internal": 41,
+                "start_representation": "7",
+                "stop_representation": "41",
+                "answer": 34,
+                "game_level": 0,
+                "expected_cpu": 34,
+                "expected_repr": "34",
             },
             {
-                'left_glyph': '[', 'right_glyph': ']', 'start_internal': 7, 'stop_internal': 41,
-                'start_representation': '7', 'stop_representation': '41', 'answer': 35, 'game_level': 0,
-                'expected_cpu': 35, 'expected_repr': '35'
+                "left_glyph": "[",
+                "right_glyph": "]",
+                "start_internal": 7,
+                "stop_internal": 41,
+                "start_representation": "7",
+                "stop_representation": "41",
+                "answer": 35,
+                "game_level": 0,
+                "expected_cpu": 35,
+                "expected_repr": "35",
             },
             {
-                'left_glyph': '(', 'right_glyph': ')', 'start_internal': 200000000, 'game_level': 11,
-                'stop_internal': 350000001, 'start_representation': '200 000 000', 'answer': 150000000,
-                'stop_representation': '350 000 001', 'expected_cpu': 150000000, 'expected_repr': '150 000 000'
+                "left_glyph": "(",
+                "right_glyph": ")",
+                "start_internal": 200000000,
+                "game_level": 11,
+                "stop_internal": 350000001,
+                "start_representation": "200 000 000",
+                "answer": 150000000,
+                "stop_representation": "350 000 001",
+                "expected_cpu": 150000000,
+                "expected_repr": "150 000 000",
             },
         ]
 
         invalid_glyphs = {
-            'left_glyph': ('|', '{', '/', ']', ')'),
-            'right_glyph': ('|', '}', '/', '[', '('),
+            "left_glyph": ("|", "{", "/", "]", ")"),
+            "right_glyph": ("|", "}", "/", "[", "("),
         }
 
         # Test invalid glyph values (should trigger logger.error)
@@ -154,42 +210,68 @@ class TestIntervalOperations(unittest.TestCase):
                 with self.subTest(glyph_type=glyph_type, glyph=glyph):
                     sample_interval = correct_intervals[0].copy()
                     sample_interval[glyph_type] = glyph
-                    result = interval_count_game.generate_result(sample_interval)
+                    result = interval_count_game.generate_result(
+                        sample_interval
+                    )
                     self.assertIsNone(result)
-                    mock_logger.error.assert_called_with('unexpected glyph %s', glyph)
+                    mock_logger.error.assert_called_with(
+                        "unexpected glyph %s", glyph
+                    )
                     mock_logger.reset_mock()
 
         # Test correct intervals (should not trigger any logging)
         for i, interval_data in enumerate(correct_intervals):
-            expected_cpu = interval_data.pop('expected_cpu')
-            expected_repr = interval_data.pop('expected_repr')
-            
+            expected_cpu = interval_data.pop("expected_cpu")
+            expected_repr = interval_data.pop("expected_repr")
+
             with self.subTest(interval=i):
                 result = interval_count_game.generate_result(interval_data)
                 self.assertIsNotNone(result)
-                self.assertEqual(result['answer_representation'], expected_repr)
-                self.assertEqual(result['cpu_representation'], expected_repr)
-                self.assertEqual(result['cpu_internal'], expected_cpu)
-                self.assertTrue(result['outcome'])
-                self.assertTrue(all(element in result for element in self.metadata))
+                self.assertEqual(
+                    result["answer_representation"], expected_repr
+                )
+                self.assertEqual(result["cpu_representation"], expected_repr)
+                self.assertEqual(result["cpu_internal"], expected_cpu)
+                self.assertTrue(result["outcome"])
+                self.assertTrue(
+                    all(element in result for element in self.metadata)
+                )
                 mock_logger.error.assert_not_called()
                 mock_logger.reset_mock()
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_generate_result_incorrect_values(self, mock_logger):
         base_interval = {
-            'left_glyph': '(', 'right_glyph': ')', 'start_internal': 7, 'stop_internal': 41,
-            'start_representation': '7', 'stop_representation': '41', 'answer': 38, 'game_level': 0
+            "left_glyph": "(",
+            "right_glyph": ")",
+            "start_internal": 7,
+            "stop_internal": 41,
+            "start_representation": "7",
+            "stop_representation": "41",
+            "answer": 38,
+            "game_level": 0,
         }
 
         invalid_intervals = [
             {
-                'left_glyph': '[', 'right_glyph': ']', 'start_internal': 41, 'stop_internal': 7,
-                'start_representation': '7', 'stop_representation': '41', 'answer': 35, 'game_level': 0
+                "left_glyph": "[",
+                "right_glyph": "]",
+                "start_internal": 41,
+                "stop_internal": 7,
+                "start_representation": "7",
+                "stop_representation": "41",
+                "answer": 35,
+                "game_level": 0,
             },
             {
-                'left_glyph': '[', 'right_glyph': ']', 'start_internal': 41, 'stop_internal': 7,
-                'start_representation': '41', 'stop_representation': '7', 'answer': 35, 'game_level': 0
+                "left_glyph": "[",
+                "right_glyph": "]",
+                "start_internal": 41,
+                "stop_internal": 7,
+                "start_representation": "41",
+                "stop_representation": "7",
+                "answer": 35,
+                "game_level": 0,
             },
         ]
 
@@ -198,18 +280,22 @@ class TestIntervalOperations(unittest.TestCase):
             with self.subTest(missing_key=key):
                 incomplete_interval = base_interval.copy()
                 incomplete_interval.pop(key)
-                result = interval_count_game.generate_result(incomplete_interval)
+                result = interval_count_game.generate_result(
+                    incomplete_interval
+                )
                 self.assertIsNone(result)
-                mock_logger.error.assert_called_with('%s not found in form data.', key)
+                mock_logger.error.assert_called_with(
+                    "%s not found in form data.", key
+                )
                 mock_logger.reset_mock()
 
         # Test wrong answer case (should not trigger any error logging)
         result = interval_count_game.generate_result(base_interval)
         self.assertIsNotNone(result)
-        self.assertEqual(result['answer_representation'], '38')
-        self.assertEqual(result['cpu_representation'], '33')
-        self.assertEqual(result['cpu_internal'], 33)
-        self.assertFalse(result['outcome'])
+        self.assertEqual(result["answer_representation"], "38")
+        self.assertEqual(result["cpu_representation"], "33")
+        self.assertEqual(result["cpu_internal"], 33)
+        self.assertFalse(result["outcome"])
         self.assertTrue(all(element in result for element in self.metadata))
         mock_logger.error.assert_not_called()
         mock_logger.reset_mock()
@@ -225,18 +311,20 @@ class TestIntervalOperations(unittest.TestCase):
 
     def test_prettify_number(self):
         test_cases = [
-            (100, '100'),
-            (-100, '-100'),
-            (1000, '1 000'),
-            (-1000, '-1 000'),
-            (10000, '10 000'),
-            (-10000, '-10 000'),
-            (100000, '100 000'),
-            (-100000, '-100 000'),
-            (1000000, '1 000 000'),
-            (-1000000, '-1 000 000'),
+            (100, "100"),
+            (-100, "-100"),
+            (1000, "1 000"),
+            (-1000, "-1 000"),
+            (10000, "10 000"),
+            (-10000, "-10 000"),
+            (100000, "100 000"),
+            (-100000, "-100 000"),
+            (1000000, "1 000 000"),
+            (-1000000, "-1 000 000"),
         ]
 
         for number, expected in test_cases:
             with self.subTest(number=number):
-                self.assertEqual(interval_count_game.prettify_number(number), expected)
+                self.assertEqual(
+                    interval_count_game.prettify_number(number), expected
+                )

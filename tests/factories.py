@@ -57,17 +57,13 @@ def create_user(connection, **kwargs):
     Raises:
         sqlalchemy.exc.SQLAlchemyError:
             If db operations fail beyond expected duplicate country handling.
-
-    Notes:
-        If a country creation fails due to duplicate constraints, it fetches the
-        existing country instead.
     """
     try:
         country = create_country(connection, **kwargs)
     except exc.IntegrityError as ex:
         logger.debug(
             f'Duplicate entry for country "{ex.params[0]}"'
-            f' Fetching the existing one.'
+            f" Fetching the existing one."
         )
         country_short_name = models.country.c.english_short_name
         where_clause = country_short_name == ex.params[0]
@@ -76,12 +72,12 @@ def create_user(connection, **kwargs):
 
     current_user = next(infinite_sequence)
     user_values = {
-        'username': f'JohnWick{current_user}',
-        'first_name': 'John',
-        'last_name': 'Wick',
-        'email': f'jw{current_user}@knowlift.com',
-        'password': os.urandom(16).hex(),
-        'country_id': country.id,
+        "username": f"JohnWick{current_user}",
+        "first_name": "John",
+        "last_name": "Wick",
+        "email": f"jw{current_user}@knowlift.com",
+        "password": os.urandom(16).hex(),
+        "country_id": country.id,
     }
     user_values.update(
         pair for pair in kwargs.items() if pair[0] in user_values
@@ -93,7 +89,7 @@ def create_user(connection, **kwargs):
 
     # select
     username_column = models.user.c.username
-    where_clause = username_column == user_values['username']
+    where_clause = username_column == user_values["username"]
     select_query = sqlalchemy.select(models.user).where(where_clause)
     result = connection.execute(select_query)
     return result.fetchone()
@@ -120,9 +116,9 @@ def create_country(connection, **kwargs):
             If other database operations fail.
     """
     country_values = {
-        'english_short_name': 'Romania',
-        'alpha2_code': 'RO',
-        'alpha3_code': 'ROU'
+        "english_short_name": "Romania",
+        "alpha2_code": "RO",
+        "alpha3_code": "ROU",
     }
     country_values.update(
         pair for pair in kwargs.items() if pair[0] in country_values
@@ -134,7 +130,7 @@ def create_country(connection, **kwargs):
 
     # select
     country_short_name = models.country.c.english_short_name
-    where_clause = country_short_name == country_values['english_short_name']
+    where_clause = country_short_name == country_values["english_short_name"]
     select_query = sqlalchemy.select(models.country).where(where_clause)
     result = connection.execute(select_query)
     return result.fetchone()
