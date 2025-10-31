@@ -22,3 +22,14 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "A", # flake8-builtins
+    "B", # flake8-bugbear
+    "I", # isort
+    "LOG", # flake8-logging
+]
+
+[tool.ruff.lint.isort]
+force-single-line = true
