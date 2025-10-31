@@ -38,15 +38,14 @@ over time.
 """
 
 # Standard library
-import logging
 import json
+import logging
 
 # Third-party
 import flask
 
 # Project specific
 from knowlift.application import interval_count
-
 
 logger = logging.getLogger(__name__)
 

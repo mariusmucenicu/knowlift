@@ -35,7 +35,6 @@ from sqlalchemy import exc
 # Project specific
 from knowlift.data import models
 
-
 logger = logging.getLogger(__name__)
 
 infinite_sequence = itertools.count(start=1)

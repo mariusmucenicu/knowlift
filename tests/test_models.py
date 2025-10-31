@@ -18,8 +18,8 @@ from sqlalchemy import exc
 
 # Project specific
 from knowlift.data import models
-from tests import factories
 from tests import base
+from tests import factories
 
 
 class UserModelTests(base.ModelTestCase):

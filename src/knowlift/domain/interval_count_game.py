@@ -41,7 +41,6 @@ __author__ = 'Marius Mucenicu <marius_mucenicu@yahoo.com>'
 import logging
 import random
 
-
 logger = logging.getLogger(__name__)
 
 GAME_LEVELS = (

@@ -29,7 +29,6 @@ import datetime
 # Third party
 import sqlalchemy
 
-
 metadata = sqlalchemy.MetaData()
 
 user = sqlalchemy.Table(
