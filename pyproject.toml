@@ -31,8 +31,10 @@ select = [
     "A", # flake8-builtins
     "B", # flake8-bugbear
     "E", # pycodestyle-error
+    "F", # pyflakes
     "I", # isort
     "LOG", # flake8-logging
+    "W", # pycodestyle-warning
 ]
 
 [tool.ruff.lint.isort]
