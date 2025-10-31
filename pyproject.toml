@@ -23,10 +23,14 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.ruff]
+line-length = 79 # same as PEP8
+
 [tool.ruff.lint]
 select = [
     "A", # flake8-builtins
     "B", # flake8-bugbear
+    "E", # pycodestyle-error
     "I", # isort
     "LOG", # flake8-logging
 ]
