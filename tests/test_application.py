@@ -36,49 +36,49 @@ class IntervalCountGameTests(unittest.TestCase):
 
     def test_start_game_valid_level(self):
         """Test game initiation with valid difficulty level."""
-        result = interval_count.start_game('0')
-        
-        self.assertIsNotNone(result)
-        self.assertIn('left_glyph', result)
-        self.assertIn('right_glyph', result)
-        self.assertIn('start_internal', result)
-        self.assertIn('stop_internal', result)
-        self.assertIn('game_level', result)
+        result = interval_count.start_game("0")
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+        self.assertIsNotNone(result)
+        self.assertIn("left_glyph", result)
+        self.assertIn("right_glyph", result)
+        self.assertIn("start_internal", result)
+        self.assertIn("stop_internal", result)
+        self.assertIn("game_level", result)
+
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_start_game_invalid_level(self, mock_logger):
         """Test game initiation with invalid difficulty level."""
-        result = interval_count.start_game('invalid')
-        
+        result = interval_count.start_game("invalid")
+
         self.assertIsNone(result)
         mock_logger.error.assert_called()
 
     def test_evaluate_answer_valid_data(self):
         """Test answer evaluation with valid game data."""
         test_data = {
-            'left_glyph': '[',
-            'right_glyph': ']',
-            'start_internal': 5,
-            'stop_internal': 10,
-            'start_representation': '5',
-            'stop_representation': '10',
-            'answer': 6,
-            'game_level': 0
+            "left_glyph": "[",
+            "right_glyph": "]",
+            "start_internal": 5,
+            "stop_internal": 10,
+            "start_representation": "5",
+            "stop_representation": "10",
+            "answer": 6,
+            "game_level": 0,
         }
-        
-        result = interval_count.evaluate_answer(test_data)
-        
-        self.assertIsNotNone(result)
-        self.assertIn('outcome', result)
-        self.assertIn('cpu_internal', result)
-        self.assertEqual(result['outcome'], True)
 
-    @mock.patch('knowlift.domain.interval_count_game.logger')
+        result = interval_count.evaluate_answer(test_data)
+
+        self.assertIsNotNone(result)
+        self.assertIn("outcome", result)
+        self.assertIn("cpu_internal", result)
+        self.assertEqual(result["outcome"], True)
+
+    @mock.patch("knowlift.domain.interval_count_game.logger")
     def test_evaluate_answer_invalid_data(self, mock_logger):
         """Test answer evaluation with invalid game data."""
-        test_data = {'invalid': 'data'}
-        
+        test_data = {"invalid": "data"}
+
         result = interval_count.evaluate_answer(test_data)
-        
+
         self.assertIsNone(result)
         mock_logger.error.assert_called()

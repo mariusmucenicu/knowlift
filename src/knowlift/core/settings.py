@@ -59,38 +59,38 @@ class Config:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(SETTINGS_DIR)))
 
     # The absolute pathname of the database file to be opened.
-    DATABASE = os.path.join(BASE_DIR, 'default.db')
+    DATABASE = os.path.join(BASE_DIR, "default.db")
 
     # The secret key is used to provide cryptographic signing (e.g used
     # to sign Cookies). SECURITY WARNING: Set this to some random bytes.
     # Keep this value secret in production!
     SECRET_KEY = (
-        '261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868'
+        "261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868"
     )
 
     # Initial configuration for the logging machinery.
     LOGGING_CONFIG = {
-        'version': 1,
-        'formatters': {
-            'default': {
-                'format': (
+        "version": 1,
+        "formatters": {
+            "default": {
+                "format": (
                     "[%(asctime)s] %(levelname)s in %(module)s, "
                     "line %(lineno)d: %(message)s"
                 )
             },
         },
-        'handlers': {
-            'default': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'default',
+        "handlers": {
+            "default": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
             },
-            'null': {
-                'class': 'logging.NullHandler',
+            "null": {
+                "class": "logging.NullHandler",
             },
         },
-        'root': {
-            'level': 'DEBUG',
-            'handlers': ['null'],
+        "root": {
+            "level": "DEBUG",
+            "handlers": ["null"],
         },
     }
 
@@ -121,14 +121,16 @@ class ProductionConfig(Config):
     def SECRET_KEY(self):
         key = os.environ.get("KNOWLIFT_SECRET_KEY")
         if not key:
-            raise RuntimeError("KNOWLIFT_SECRET_KEY is required in production.")
+            raise RuntimeError(
+                "KNOWLIFT_SECRET_KEY is required in production."
+            )
         return key
 
     @functools.cached_property
     def LOGGING_CONFIG(self):
         base_config = copy.deepcopy(super().LOGGING_CONFIG)
-        base_config['root']['level'] = 'INFO'
-        base_config['root']['handlers'] = ['default']
+        base_config["root"]["level"] = "INFO"
+        base_config["root"]["handlers"] = ["default"]
         return base_config
 
 
@@ -140,12 +142,12 @@ class DevelopmentConfig(Config):
     """
 
     TESTING = False
-    DATABASE = os.path.join(Config.BASE_DIR, 'development.db')
+    DATABASE = os.path.join(Config.BASE_DIR, "development.db")
 
     @functools.cached_property
     def LOGGING_CONFIG(self):
         base_config = copy.deepcopy(super().LOGGING_CONFIG)
-        base_config['root']['handlers'] = ['default']
+        base_config["root"]["handlers"] = ["default"]
         return base_config
 
 
@@ -157,13 +159,13 @@ class TestConfig(Config):
     """
 
     TESTING = True
-    DATABASE = os.path.join(Config.BASE_DIR, 'test.db')
+    DATABASE = os.path.join(Config.BASE_DIR, "test.db")
 
 
 CONFIGS = {
-    'production': ProductionConfig,
-    'development': DevelopmentConfig,
-    'test': TestConfig,
+    "production": ProductionConfig,
+    "development": DevelopmentConfig,
+    "test": TestConfig,
 }
 
 
@@ -171,7 +173,7 @@ CONFIGS = {
 def get_config(name):
     """
     Return a configuration instance based on environment name.
-    
+
     :param name: Environment name ('development', 'production', or 'test').
     :type name: str
     :return: Configuration instance for the specified environment.

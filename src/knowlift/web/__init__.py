@@ -56,28 +56,28 @@ def create_app(env=None):
     :rtype: flask.app.Flask
     """
     app = flask.Flask(
-        'knowlift',
+        "knowlift",
         instance_relative_config=True,
-        template_folder=os.path.join(os.path.dirname(__file__), 'templates'),
-        static_folder=os.path.join(os.path.dirname(__file__), 'static')
+        template_folder=os.path.join(os.path.dirname(__file__), "templates"),
+        static_folder=os.path.join(os.path.dirname(__file__), "static"),
     )
 
-    app_environment = env or os.getenv('KNOWLIFT_ENV', 'development')
+    app_environment = env or os.getenv("KNOWLIFT_ENV", "development")
     app_config = settings.get_config(app_environment)
 
     app.config.from_object(app_config)
-    app.config.from_pyfile('local_settings.py', silent=True)
-    app.config.from_prefixed_env(prefix='KNOWLIFT')
+    app.config.from_pyfile("local_settings.py", silent=True)
+    app.config.from_prefixed_env(prefix="KNOWLIFT")
 
-    logging_config.dictConfig(app.config['LOGGING_CONFIG'])
+    logging_config.dictConfig(app.config["LOGGING_CONFIG"])
 
-    app.add_url_rule('/', 'index', views.index)
-    app.add_url_rule('/about', 'about', views.about)
-    app.add_url_rule('/grade', 'grade', views.grade)
-    app.add_url_rule('/ladder', 'ladder', views.ladder)
-    app.add_url_rule('/legal', 'legal', views.legal)
-    app.add_url_rule('/play', 'play', views.play, methods=['POST'])
-    app.add_url_rule('/result', 'result', views.result, methods=['POST'])
+    app.add_url_rule("/", "index", views.index)
+    app.add_url_rule("/about", "about", views.about)
+    app.add_url_rule("/grade", "grade", views.grade)
+    app.add_url_rule("/ladder", "ladder", views.ladder)
+    app.add_url_rule("/legal", "legal", views.legal)
+    app.add_url_rule("/play", "play", views.play, methods=["POST"])
+    app.add_url_rule("/result", "result", views.result, methods=["POST"])
 
     app.register_error_handler(404, views.page_not_found)
     app.register_error_handler(500, views.internal_server_error)

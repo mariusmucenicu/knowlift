@@ -7,7 +7,7 @@ logic for different types of tests in the application.
 Classes
 -------
 AppTestCase
-    Base test case providing Flask app setup with database engine and test client.
+    Base test case providing Flask app setup with db engine and test client.
 ModelTestCase
     Pure model test case with database engine and model creation.
 """
@@ -27,8 +27,8 @@ class AppTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.app = web.create_app(env='test')
-        cls.engine = cls.app.config['DATABASE_ENGINE']
+        cls.app = web.create_app(env="test")
+        cls.engine = cls.app.config["DATABASE_ENGINE"]
 
     def setUp(self):
         super().setUp()
@@ -43,12 +43,12 @@ class AppTestCase(unittest.TestCase):
 
 
 class ModelTestCase(unittest.TestCase):
-    """Base test case for model testing with database engine and model creation."""
+    """Base test case for model testing with db engine and model creation."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        app_config = settings.get_config('test')
+        app_config = settings.get_config("test")
         cls.engine = app_config.DATABASE_ENGINE
         models.metadata.create_all(cls.engine)
 

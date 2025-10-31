@@ -25,7 +25,7 @@ from knowlift.domain import interval_count_game
 def start_game(level):
     """
     Initiate a new game round for the specified difficulty level.
-    
+
     :param level: Difficulty level for the game round.
     :type level: str
     :return: Game data containing interval information, or None if invalid.
@@ -37,7 +37,7 @@ def start_game(level):
 def evaluate_answer(data):
     """
     Process and evaluate a player's answer against the expected result.
-    
+
     :param data: Game data containing player's answer and interval metadata.
     :type data: dict
     :return: Result data with outcome and statistics, or None if invalid.

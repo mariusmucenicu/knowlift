@@ -30,7 +30,7 @@ from knowlift.core import settings
 
 PRODUCTION_MOCK_ENV_VARS = {
     "KNOWLIFT_DATABASE": "production.db",
-    "KNOWLIFT_SECRET_KEY": "super-production-secret"
+    "KNOWLIFT_SECRET_KEY": "super-production-secret",
 }
 
 
@@ -53,7 +53,6 @@ class ConfigTestBaseMixin:
         super().setUp()
         self.cfg = self.CONFIG_CLS()
 
-
     def test_testing_flag(self):
         """Verify the TESTING flag matches the expected value."""
         self.assertEqual(self.cfg.TESTING, self.EXPECTED_TESTING)
@@ -63,10 +62,14 @@ class ConfigTestBaseMixin:
         self.assertTrue(self.cfg.DATABASE.endswith(self.EXPECTED_DB_SUFFIX))
 
     def test_databse_creation(self):
-        with mock.patch('knowlift.core.settings.sqlalchemy.create_engine') as mock_engine:
+        with mock.patch(
+            "knowlift.core.settings.sqlalchemy.create_engine"
+        ) as mock_engine:
             mock_engine.return_value.url = f"sqlite:///{self.cfg.DATABASE}"
 
-            self.assertTrue(str(self.cfg.DATABASE_ENGINE.url).endswith(self.cfg.DATABASE))
+            self.assertTrue(
+                str(self.cfg.DATABASE_ENGINE.url).endswith(self.cfg.DATABASE)
+            )
             self.assertIs(self.cfg.DATABASE_ENGINE, self.cfg.DATABASE_ENGINE)
             mock_engine.assert_called_once()
 
@@ -83,11 +86,11 @@ class ConfigTestBaseMixin:
     def test_logging_config_structure(self):
         """Verify that the LOGGING_CONFIG has the required structure."""
         config = self.cfg.LOGGING_CONFIG
-        self.assertIn('version', config)
-        self.assertIn('formatters', config)
-        self.assertIn('handlers', config)
-        self.assertIn('root', config)
-        self.assertEqual(config['version'], 1)
+        self.assertIn("version", config)
+        self.assertIn("formatters", config)
+        self.assertIn("handlers", config)
+        self.assertIn("root", config)
+        self.assertEqual(config["version"], 1)
 
 
 class TestConfigDefault(ConfigTestBaseMixin, unittest.TestCase):
@@ -135,7 +138,7 @@ class TestConfigProduction(ConfigTestBaseMixin, unittest.TestCase):
     EXPECTED_SECRET_KEY = True
 
     def test_environment_validation_raises_error(self):
-        """Verify environment variables raise RuntimeError when missing or empty."""
+        """Verify env variables raise RuntimeError when missing or empty."""
         test_cases = [
             ("database_missing", {}, "DATABASE"),
             ("database_empty", {"KNOWLIFT_DATABASE": ""}, "DATABASE"),
@@ -150,16 +153,16 @@ class TestConfigProduction(ConfigTestBaseMixin, unittest.TestCase):
 
 
 class GetConfigFunctionTests(unittest.TestCase):
-    """Test get_config function for environment-based configuration selection."""
+    """Test get_config function for env-based configuration selection."""
 
     def test_get_config_by_environment(self):
-        """Verify get_config returns correct config class for each environment."""
+        """Verify get_config returns correct config class for each env."""
         test_cases = [
-            ('development', settings.DevelopmentConfig),
-            ('production', settings.ProductionConfig),
-            ('test', settings.TestConfig),
+            ("development", settings.DevelopmentConfig),
+            ("production", settings.ProductionConfig),
+            ("test", settings.TestConfig),
         ]
-        
+
         for env_name, expected_class in test_cases:
             with self.subTest(environment=env_name):
                 config = settings.get_config(env_name)
@@ -167,17 +170,17 @@ class GetConfigFunctionTests(unittest.TestCase):
 
     def test_get_config_case_insensitive(self):
         """Verify get_config handles case-insensitive environment names."""
-        config_upper = settings.get_config('DEVELOPMENT')
-        config_mixed = settings.get_config('Development')
+        config_upper = settings.get_config("DEVELOPMENT")
+        config_mixed = settings.get_config("Development")
         self.assertIsInstance(config_upper, settings.DevelopmentConfig)
         self.assertIsInstance(config_mixed, settings.DevelopmentConfig)
 
     def test_get_config_strips_whitespace(self):
         """Verify get_config strips whitespace from environment names."""
-        config = settings.get_config('  development  ')
+        config = settings.get_config("  development  ")
         self.assertIsInstance(config, settings.DevelopmentConfig)
 
     def test_get_config_default_fallback(self):
-        """Verify get_config returns DevelopmentConfig for unknown environments."""
-        config = settings.get_config('unknown')
+        """Verify get_config returns DevelopmentConfig for unknown envs."""
+        config = settings.get_config("unknown")
         self.assertIsInstance(config, settings.DevelopmentConfig)

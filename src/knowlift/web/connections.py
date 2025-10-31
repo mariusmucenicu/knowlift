@@ -38,15 +38,15 @@ def get_db_connection():
 
     :return: A db connection object that can be used to execute SQL queries.
     :rtype: sqlalchemy.Connection
-    :raises KeyError: If 'DATABASE_ENGINE' is not found in the Flask app config.
+    :raises KeyError: If 'DATABASE_ENGINE' is not found on the app config.
     :raises RuntimeError: If called outside of a Flask application context.
 
     .. note::
         The connection and transaction are automatically stored in flask.g and
         will be reused for subsequent calls within the same request context.
     """
-    if 'db' not in flask.g:
-        engine = flask.current_app.config['DATABASE_ENGINE']
+    if "db" not in flask.g:
+        engine = flask.current_app.config["DATABASE_ENGINE"]
         flask.g.db = engine.connect()
         flask.g.db_transaction = flask.g.db.begin()
         return flask.g.db
@@ -59,18 +59,16 @@ def close_db_connection(exc):
     Return the underlying DB API connection to the connection pool.
 
     This function is typically used as a Flask teardown handler to ensure
-    database connections and transactions are properly closed at the end of each
-    request, preventing connection leaks.
+    database connections and transactions are properly closed at the end of
+    each request, preventing connection leaks.
 
     :param exc: An exception that occurred during request processing, if any.
-                This parameter is required by Flask's teardown handler interface
-                but the function handles both success and error cases.
     :type exc: Exception or None
     """
     logger = flask.current_app.logger
 
-    transaction = flask.g.pop('db_transaction', None)
-    db = flask.g.pop('db', None)
+    transaction = flask.g.pop("db_transaction", None)
+    db = flask.g.pop("db", None)
 
     if transaction is not None:
         try:
@@ -78,7 +76,9 @@ def close_db_connection(exc):
                 transaction.commit()
             else:
                 transaction.rollback()
-                logger.error("Database transaction rolled back due to: %s", exc)
+                logger.error(
+                    "Database transaction rolled back due to: %s", exc
+                )
         except Exception as e:
             logger.error("Error during transaction cleanup: %s", e)
 
@@ -88,4 +88,4 @@ def close_db_connection(exc):
         except Exception as e:
             logger.error("Error closing database connection: %s", e)
     else:
-        logger.debug('The database does not exist on the application context.')
+        logger.debug("The database does not exist on the application context.")

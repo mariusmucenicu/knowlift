@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def main():
     """Initialize database tables."""
-    env = os.getenv('KNOWLIFT_ENV', 'development')
+    env = os.getenv("KNOWLIFT_ENV", "development")
 
     app_config = settings.get_config(env)
     engine = app_config.DATABASE_ENGINE
@@ -33,5 +33,5 @@ def main():
         engine.dispose()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
