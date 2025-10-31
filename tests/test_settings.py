@@ -28,7 +28,6 @@ from unittest import mock
 # Project specific
 from knowlift.core import settings
 
-
 PRODUCTION_MOCK_ENV_VARS = {
     "KNOWLIFT_DATABASE": "production.db",
     "KNOWLIFT_SECRET_KEY": "super-production-secret"
