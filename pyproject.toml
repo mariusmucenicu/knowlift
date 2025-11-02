@@ -34,6 +34,7 @@ select = [
     "F", # pyflakes
     "I", # isort
     "LOG", # flake8-logging
+    "N", # pep8-naming
     "W", # pycodestyle-warning
 ]
 
