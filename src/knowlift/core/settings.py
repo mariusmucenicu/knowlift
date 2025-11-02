@@ -47,26 +47,31 @@ class Config:
     Override these values in subclasses per-environment.
     """
 
-    # Whether testing mode is enabled. Exceptions are propagated rather
-    # than handled by Flask.
-    TESTING = False
+    # In test mode, exceptions are propagated rather than being handled.
+    TESTING = None
 
+    # Absolute path to the settings module.
     SETTINGS_PATH = os.path.abspath(__file__)
+
+    # Directory containing the settings module.
     SETTINGS_DIR = os.path.dirname(SETTINGS_PATH)
 
-    # Absolute path to the project root on the filesystem. Build paths
-    # inside the project like this: os.path.join(BASE_DIR, ...)
+    # Absolute path to the project root on the filesystem.
+    # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(SETTINGS_DIR)))
 
     # The absolute pathname of the database file to be opened.
-    DATABASE = os.path.join(BASE_DIR, "default.db")
+    DATABASE = None
 
-    # The secret key is used to provide cryptographic signing (e.g used
-    # to sign Cookies). SECURITY WARNING: Set this to some random bytes.
-    # Keep this value secret in production!
-    SECRET_KEY = (
-        "261c501ff27fc199718be6a7c8d2115d349c4ef7b26ab11222d95019112a7868"
-    )
+    # Full db connection url.
+    DATABASE_URL = None
+
+    # The SQlAlchemy database engine.
+    DATABASE_ENGINE = None
+
+    # This key is used to provide cryptographic signing (e.g to sign Cookies).
+    # SECURITY WARNING: Keep this value secret in production!
+    SECRET_KEY = None
 
     # Initial configuration for the logging machinery.
     LOGGING_CONFIG = {
@@ -94,12 +99,6 @@ class Config:
         },
     }
 
-    @functools.cached_property
-    def DATABASE_ENGINE(self):
-        """Create and return an SQLAlchemy engine."""
-        database_url = f"sqlite:///{self.DATABASE}"
-        return sqlalchemy.create_engine(database_url)
-
 
 class ProductionConfig(Config):
     """
@@ -108,30 +107,29 @@ class ProductionConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    TESTING = False
+    def __init__(self):
+        super().__init__()
+        self.TESTING = False
+        self.SECRET_KEY = os.environ.get("KNOWLIFT_SECRET_KEY")
+        self.DATABASE = os.environ.get("KNOWLIFT_DATABASE")
+        self.DATABASE_URL = f"sqlite:///{self.DATABASE}"
 
-    @functools.cached_property
-    def DATABASE(self):
-        db = os.environ.get("KNOWLIFT_DATABASE")
-        if not db:
-            raise RuntimeError("KNOWLIFT_DATABASE is required in production.")
-        return db
+        self._validate()
 
-    @functools.cached_property
-    def SECRET_KEY(self):
-        key = os.environ.get("KNOWLIFT_SECRET_KEY")
-        if not key:
-            raise RuntimeError(
-                "KNOWLIFT_SECRET_KEY is required in production."
-            )
-        return key
+        self.DATABASE_ENGINE = sqlalchemy.create_engine(self.DATABASE_URL)
+        self.LOGGING_CONFIG = self._configure_logging(self.LOGGING_CONFIG)
 
-    @functools.cached_property
-    def LOGGING_CONFIG(self):
-        base_config = copy.deepcopy(super().LOGGING_CONFIG)
-        base_config["root"]["level"] = "INFO"
-        base_config["root"]["handlers"] = ["default"]
-        return base_config
+    def _validate(self):
+        if not self.SECRET_KEY:
+            raise RuntimeError("SECRET_KEY is required in production.")
+        if not self.DATABASE:
+            raise RuntimeError("DATABASE is required in production.")
+
+    def _configure_logging(self, logging_config):
+        logging_config = copy.deepcopy(logging_config)
+        logging_config["root"]["level"] = "INFO"
+        logging_config["root"]["handlers"] = ["default"]
+        return logging_config
 
 
 class DevelopmentConfig(Config):
@@ -141,14 +139,19 @@ class DevelopmentConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    TESTING = False
-    DATABASE = os.path.join(Config.BASE_DIR, "development.db")
+    def __init__(self):
+        super().__init__()
+        self.TESTING = False
+        self.SECRET_KEY = "q3J8v4oX8dK2Yf1L7eJ0w9rQ5mT2pA6sC3uV1bH4zE8I="
+        self.DATABASE = os.path.join(Config.BASE_DIR, "development.db")
+        self.DATABASE_URL = f"sqlite:///{self.DATABASE}"
+        self.DATABASE_ENGINE = sqlalchemy.create_engine(self.DATABASE_URL)
+        self.LOGGING_CONFIG = self._configure_logging(self.LOGGING_CONFIG)
 
-    @functools.cached_property
-    def LOGGING_CONFIG(self):
-        base_config = copy.deepcopy(super().LOGGING_CONFIG)
-        base_config["root"]["handlers"] = ["default"]
-        return base_config
+    def _configure_logging(self, logging_config):
+        logging_config = copy.deepcopy(logging_config)
+        logging_config["root"]["handlers"] = ["default"]
+        return logging_config
 
 
 class TestConfig(Config):
@@ -158,8 +161,12 @@ class TestConfig(Config):
     Check the BaseClass for additional information on individual settings.
     """
 
-    TESTING = True
-    DATABASE = os.path.join(Config.BASE_DIR, "test.db")
+    def __init__(self):
+        super().__init__()
+        self.TESTING = True
+        self.DATABASE = os.path.join(Config.BASE_DIR, "test.db")
+        self.DATABASE_URL = f"sqlite:///{self.DATABASE}"
+        self.DATABASE_ENGINE = sqlalchemy.create_engine(self.DATABASE_URL)
 
 
 CONFIGS = {
