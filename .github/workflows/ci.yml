@@ -12,8 +12,8 @@ on:
       - 'master'
 
 jobs:
-  lint:
-    name: Lint
+  code_style:
+    name: Code style
     runs-on: ubuntu-latest
 
     steps:
@@ -32,10 +32,12 @@ jobs:
       - name: Run linter
         run: uv run ruff check
 
+      - name: Run formatter
+        run:  uv run ruff format --check
 
   code_quality:
     name: Tests and coverage
-    needs: lint
+    needs: code_style
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
