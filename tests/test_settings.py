@@ -23,28 +23,27 @@ GetConfigFunctionTests
 # Standard library
 import os
 import unittest
-from unittest import mock
+import unittest.mock
 
 # Project specific
 from knowlift.core import settings
 
 PRODUCTION_MOCK_ENV_VARS = {
     "KNOWLIFT_DATABASE": "production.db",
-    "KNOWLIFT_SECRET_KEY": "super-production-secret",
+    "KNOWLIFT_SECRET_KEY": "super-secret-prod-key",
 }
 
 
 class ConfigTestBaseMixin:
     """
-    Base test class with common attribute tests for configuration classes.
-
-    Subclasses should override class attributes to define expected values.
+    Common assertions for all config classes.
     """
 
     CONFIG_CLS = None
 
     EXPECTED_TESTING = None
-    EXPECTED_DB_SUFFIX = None
+    EXPECTED_DATABASE = None
+    EXPECTED_DATABASE_URL = None
     EXPECTED_ROOT_LOG_LEVEL = None
     EXPECTED_ROOT_LOG_HANDLERS = None
     EXPECTED_SECRET_KEY = None
@@ -54,37 +53,34 @@ class ConfigTestBaseMixin:
         self.cfg = self.CONFIG_CLS()
 
     def test_testing_flag(self):
-        """Verify the TESTING flag matches the expected value."""
+        """Verify TESTING flag matches expected value."""
         self.assertEqual(self.cfg.TESTING, self.EXPECTED_TESTING)
 
     def test_database_path(self):
-        """Verify the DATABASE path and the engine configuration."""
-        self.assertTrue(self.cfg.DATABASE.endswith(self.EXPECTED_DB_SUFFIX))
+        """Verify DATABASE path matches expected value."""
+        self.assertEqual(self.cfg.DATABASE, self.EXPECTED_DATABASE)
 
-    def test_databse_creation(self):
-        with mock.patch(
-            "knowlift.core.settings.sqlalchemy.create_engine"
-        ) as mock_engine:
-            mock_engine.return_value.url = f"sqlite:///{self.cfg.DATABASE}"
+    def test_database_url(self):
+        """Verify DATABASE_URL matches expected value."""
+        self.assertEqual(self.cfg.DATABASE_URL, self.EXPECTED_DATABASE_URL)
 
-            self.assertTrue(
-                str(self.cfg.DATABASE_ENGINE.url).endswith(self.cfg.DATABASE)
-            )
-            self.assertIs(self.cfg.DATABASE_ENGINE, self.cfg.DATABASE_ENGINE)
-            mock_engine.assert_called_once()
+    def test_secret_key(self):
+        """Verify SECRET_KEY matches expected value."""
+        self.assertEqual(self.cfg.SECRET_KEY, self.EXPECTED_SECRET_KEY)
+
+    def test_database_engine(self):
+        """Verify DATABASE_ENGINE URL matches expected value."""
+        engine_url = self.cfg.DATABASE_ENGINE.url.render_as_string()
+        self.assertEqual(engine_url, self.EXPECTED_DATABASE_URL)
 
     def test_logging_config(self):
-        """Verify the logging configuration contains the expected values."""
+        """Verify logging config contains expected level and handlers."""
         root = self.cfg.LOGGING_CONFIG["root"]
         self.assertEqual(root["level"], self.EXPECTED_ROOT_LOG_LEVEL)
         self.assertEqual(root["handlers"], self.EXPECTED_ROOT_LOG_HANDLERS)
 
-    def test_secret_key(self):
-        """Verify that the SECRET_KEY exists and has appropriate value."""
-        self.assertIsNotNone(self.cfg.SECRET_KEY)
-
     def test_logging_config_structure(self):
-        """Verify that the LOGGING_CONFIG has the required structure."""
+        """Verify logging config has required structure."""
         config = self.cfg.LOGGING_CONFIG
         self.assertIn("version", config)
         self.assertIn("formatters", config)
@@ -94,93 +90,162 @@ class ConfigTestBaseMixin:
 
 
 class TestConfigDefault(ConfigTestBaseMixin, unittest.TestCase):
-    """Test the base configuration class functionality."""
+    """Test base Config class functionality."""
 
     CONFIG_CLS = settings.Config
-    EXPECTED_TESTING = False
-    EXPECTED_DB_SUFFIX = "default.db"
+
+    EXPECTED_TESTING = None
+    EXPECTED_DATABASE = None
+    EXPECTED_DATABASE_URL = None
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
     EXPECTED_ROOT_LOG_HANDLERS = ["null"]
-    EXPECTED_SECRET_KEY = True
+    EXPECTED_SECRET_KEY = None
+
+    def test_database_engine(self):
+        """Verify DATABASE_ENGINE is None for base config."""
+        self.assertIsNone(self.cfg.DATABASE_ENGINE)
 
 
 class TestConfigDevelopment(ConfigTestBaseMixin, unittest.TestCase):
     """Test development configuration class functionality."""
 
     CONFIG_CLS = settings.DevelopmentConfig
+
+    BASE_DIR = settings.DevelopmentConfig.BASE_DIR
     EXPECTED_TESTING = False
-    EXPECTED_DB_SUFFIX = "development.db"
+    EXPECTED_DATABASE = os.path.join(BASE_DIR, "development.db")
+    EXPECTED_DATABASE_URL = f"sqlite:///{EXPECTED_DATABASE}"
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
     EXPECTED_ROOT_LOG_HANDLERS = ["default"]
-    EXPECTED_SECRET_KEY = True
+    EXPECTED_SECRET_KEY = "q3J8v4oX8dK2Yf1L7eJ0w9rQ5mT2pA6sC3uV1bH4zE8I="
 
 
 class TestConfigTesting(ConfigTestBaseMixin, unittest.TestCase):
     """Test testing configuration class functionality."""
 
     CONFIG_CLS = settings.TestConfig
+
+    BASE_DIR = settings.TestConfig.BASE_DIR
     EXPECTED_TESTING = True
-    EXPECTED_DB_SUFFIX = "test.db"
+    EXPECTED_DATABASE = os.path.join(BASE_DIR, "test.db")
+    EXPECTED_DATABASE_URL = f"sqlite:///{EXPECTED_DATABASE}"
     EXPECTED_ROOT_LOG_LEVEL = "DEBUG"
     EXPECTED_ROOT_LOG_HANDLERS = ["null"]
-    EXPECTED_SECRET_KEY = True
+    EXPECTED_SECRET_KEY = None
 
 
-@mock.patch.dict(os.environ, PRODUCTION_MOCK_ENV_VARS)
 class TestConfigProduction(ConfigTestBaseMixin, unittest.TestCase):
     """Test production configuration class functionality."""
 
     CONFIG_CLS = settings.ProductionConfig
+
     EXPECTED_TESTING = False
-    EXPECTED_DB_SUFFIX = "production.db"
+    EXPECTED_DATABASE = "production.db"
+    EXPECTED_DATABASE_URL = f"sqlite:///{EXPECTED_DATABASE}"
     EXPECTED_ROOT_LOG_LEVEL = "INFO"
     EXPECTED_ROOT_LOG_HANDLERS = ["default"]
-    EXPECTED_SECRET_KEY = True
+    EXPECTED_SECRET_KEY = "super-secret-prod-key"
 
-    def test_environment_validation_raises_error(self):
-        """Verify env variables raise RuntimeError when missing or empty."""
-        test_cases = [
-            ("database_missing", {}, "DATABASE"),
-            ("database_empty", {"KNOWLIFT_DATABASE": ""}, "DATABASE"),
-            ("secret_key_missing", {}, "SECRET_KEY"),
-            ("secret_key_empty", {"KNOWLIFT_SECRET_KEY": ""}, "SECRET_KEY"),
-        ]
-        for case_name, env_vars, config_attr in test_cases:
-            with self.subTest(case=case_name):
-                with mock.patch.dict(os.environ, env_vars, clear=True):
-                    with self.assertRaises(RuntimeError):
-                        getattr(self.cfg, config_attr)
+    @unittest.mock.patch.dict("os.environ", PRODUCTION_MOCK_ENV_VARS)
+    def setUp(self):
+        super().setUp()
+
+    def test_validate_with_valid_config(self):
+        """Test that validation passes when all required values are present."""
+        self.cfg._validate()
+
+    def test_validate_missing_secret_key(self):
+        """Test that RuntimeError is raised when SECRET_KEY is missing."""
+        self.cfg.SECRET_KEY = None
+
+        with self.assertRaises(RuntimeError) as context:
+            self.cfg._validate()
+
+        exception_message = str(context.exception)
+        expected_error_message = "SECRET_KEY is required in production."
+        self.assertEqual(exception_message, expected_error_message)
+
+    def test_validate_empty_secret_key(self):
+        """Test that RuntimeError is raised when SECRET_KEY is empty."""
+        self.cfg.SECRET_KEY = ""
+
+        with self.assertRaises(RuntimeError) as context:
+            self.cfg._validate()
+
+        exception_message = str(context.exception)
+        expected_error_message = "SECRET_KEY is required in production."
+        self.assertEqual(exception_message, expected_error_message)
+
+    def test_validate_missing_database(self):
+        """Test that RuntimeError is raised when DATABASE is missing."""
+        self.cfg.DATABASE = None
+
+        with self.assertRaises(RuntimeError) as context:
+            self.cfg._validate()
+
+        exception_message = str(context.exception)
+        expected_error_message = "DATABASE is required in production."
+        self.assertEqual(exception_message, expected_error_message)
+
+    def test_validate_empty_database(self):
+        """Test that validation raises RuntimeError when DATABASE is empty."""
+        self.cfg.DATABASE = ""
+
+        with self.assertRaises(RuntimeError) as context:
+            self.cfg._validate()
+
+        exception_message = str(context.exception)
+        expected_error_message = "DATABASE is required in production."
+        self.assertEqual(exception_message, expected_error_message)
 
 
 class GetConfigFunctionTests(unittest.TestCase):
-    """Test get_config function for env-based configuration selection."""
+    """Test the get_config function for environment selection."""
+
+    def tearDown(self):
+        settings.get_config.cache_clear()
+        super().tearDown()
 
     def test_get_config_by_environment(self):
-        """Verify get_config returns correct config class for each env."""
-        test_cases = [
+        """Test config retrieval by environment name."""
+        cases = [
             ("development", settings.DevelopmentConfig),
-            ("production", settings.ProductionConfig),
             ("test", settings.TestConfig),
         ]
 
-        for env_name, expected_class in test_cases:
+        for env_name, expected_class in cases:
             with self.subTest(environment=env_name):
-                config = settings.get_config(env_name)
-                self.assertIsInstance(config, expected_class)
+                cfg = settings.get_config(env_name)
+                self.assertIsInstance(cfg, expected_class)
+
+    @unittest.mock.patch.dict("os.environ", PRODUCTION_MOCK_ENV_VARS)
+    def test_get_config_production(self):
+        """Test production config with environment variables."""
+        cfg = settings.get_config("production")
+        self.assertIsInstance(cfg, settings.ProductionConfig)
 
     def test_get_config_case_insensitive(self):
-        """Verify get_config handles case-insensitive environment names."""
-        config_upper = settings.get_config("DEVELOPMENT")
-        config_mixed = settings.get_config("Development")
-        self.assertIsInstance(config_upper, settings.DevelopmentConfig)
-        self.assertIsInstance(config_mixed, settings.DevelopmentConfig)
+        """Test config retrieval with case insensitive environment names."""
+        cfg_upper = settings.get_config("DEVELOPMENT")
+        cfg_mixed = settings.get_config("Development")
+        self.assertIsInstance(cfg_upper, settings.DevelopmentConfig)
+        self.assertIsInstance(cfg_mixed, settings.DevelopmentConfig)
 
     def test_get_config_strips_whitespace(self):
-        """Verify get_config strips whitespace from environment names."""
-        config = settings.get_config("  development  ")
-        self.assertIsInstance(config, settings.DevelopmentConfig)
+        """Test config retrieval strips whitespace from environment names."""
+        cfg = settings.get_config("   development   ")
+        self.assertIsInstance(cfg, settings.DevelopmentConfig)
 
     def test_get_config_default_fallback(self):
-        """Verify get_config returns DevelopmentConfig for unknown envs."""
-        config = settings.get_config("unknown")
-        self.assertIsInstance(config, settings.DevelopmentConfig)
+        """Test config fallback to development for unknown environments."""
+        cfg = settings.get_config("unknown-env-name")
+        self.assertIsInstance(cfg, settings.DevelopmentConfig)
+
+    def test_get_config_is_cached(self):
+        """Test config instances are cached and reused."""
+        cfg1 = settings.get_config("development")
+        cfg2 = settings.get_config("development")
+        self.assertIs(cfg1, cfg2)
+
+        cfg3 = settings.get_config("test")
+        self.assertIsNot(cfg1, cfg3)
