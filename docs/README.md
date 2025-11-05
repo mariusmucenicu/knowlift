@@ -3,13 +3,6 @@
 A series of interactive games designed to boost your mood.  
 Works great on both phones 📱 and computers 💻.
 
-## 🏗️ Architecture
-
-The project follows a layered architecture pattern where each layer only depends on the layer below it.  
-The layers in the diagram below map directly to Python packages under `src/`, e.g. **Web** → `src/web`, etc.
-
-![Architecture Diagram](./architecture.svg)
-
 ## 📊 Project Status
 
 | Category           | Badge |
@@ -23,10 +16,18 @@ The layers in the diagram below map directly to Python packages under `src/`, e.
 
 ## 📖 Contents
 
+- [Architecture](#-architecture)  
 - [Development](#-development)  
 - [Contributing](#-contributing)  
 - [Versioning](#-versioning)  
 - [Code of Conduct](#-code-of-conduct)  
+
+## 🏗️ Architecture
+
+The project follows a layered architecture pattern where each layer only depends on the layer below it.  
+The layers in the diagram below map directly to Python packages under `src/`, e.g. **Web** → `src/web`, etc.
+
+![Architecture Diagram](./architecture.svg)
 
 ## 🛠 Development
 
