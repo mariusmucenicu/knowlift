@@ -23,11 +23,28 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Set up Python
+      - name: Setup node
+        uses: actions/setup-node@v6
+        with:
+          cache: npm
+
+      - name: Install commitlint
+        run: npm install -D @commitlint/cli @commitlint/config-conventional
+
+      - name: Install Python
         run: uv python install
 
       - name: Install dependencies
         run: uv sync --locked
+
+      - name: Run commitlint
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          readonly BASE=${{ github.event.pull_request.base.sha }}
+          readonly HEAD=${{ github.event.pull_request.head.sha }}
+
+          git fetch origin "$BASE" "$HEAD"
+          npx commitlint --from "$BASE" --to "$HEAD" --verbose
 
       - name: Run linter
         run: uv run ruff check
