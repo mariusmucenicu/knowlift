@@ -31,10 +31,10 @@ jobs:
       - name: Install node dependencies
         run: npm ci
 
-      - name: Install Python
+      - name: Install python
         run: uv python install
 
-      - name: Install dependencies
+      - name: Install python dependencies
         run: uv sync --locked
 
       - name: Run commitlint
