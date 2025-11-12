@@ -64,8 +64,8 @@ By participating, you are expected to uphold this code.
 [issues-badge]: https://img.shields.io/github/issues/mariusmucenicu/knowlift.svg
 [issues-link]: https://github.com/mariusmucenicu/knowlift/issues
 
-[commits-badge]: https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/2.0.0.svg
-[commits-link]: https://github.com/mariusmucenicu/knowlift/compare/2.0.0...master
+[commits-badge]: https://img.shields.io/github/commits-since/mariusmucenicu/knowlift/2.1.0.svg
+[commits-link]: https://github.com/mariusmucenicu/knowlift/compare/2.1.0...master
 
 [covenant-badge]: https://img.shields.io/badge/Contributor%20Covenant-3.0-4baaaa.svg
 [covenant-link]: https://www.contributor-covenant.org/version/3/0/code_of_conduct

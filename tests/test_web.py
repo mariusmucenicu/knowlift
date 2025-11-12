@@ -149,7 +149,7 @@ class TestIndexPage(base.AppTestCase):
             "d-flex flex-column justify-content-center",
             "...Shh",
             "A pit stop for your brain.",
-            "Version 1.0.0",
+            "Version 2.1.0",
             "header",
             "content",
             "footer",
