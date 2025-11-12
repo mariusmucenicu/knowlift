@@ -12,7 +12,7 @@
     "extends": ["@commitlint/config-conventional"],
     "formatter": "@commitlint/format",
     "rules": {
-      "subject-case": [2, "always", "sentence-case"]
+      "subject-case": [2, "always", ["sentence-case", "lower-case"]]
     }
   }
 }
