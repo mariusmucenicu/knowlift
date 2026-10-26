@@ -12,7 +12,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "coverage==7.16.1",
+    "coverage==7.17.0",
     "ruff==0.16.9",
 ]
 
